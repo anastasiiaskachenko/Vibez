@@ -1,7 +1,7 @@
 import Foundation
 
 
-struct Category {
+struct Genre {
     let id: Int
     var name: String
 }
