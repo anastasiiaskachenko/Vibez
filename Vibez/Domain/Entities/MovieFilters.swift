@@ -11,8 +11,8 @@ enum SortBy: String, Codable,CaseIterable {
     
     var displayName: String {
         switch self {
-        case .popularityAsc: "Most popular"
-        case .popularityDesc: "Least popular"
+        case .popularityAsc: "Least popular"
+        case .popularityDesc: "Most popular"
         case .primaryReleaseDateAsc: "Release date(Newest)"
         case .primaryReleaseDateDesc: "Release date(Oldest)"
         case .voteAverageAsc: "Highest rated"
@@ -23,7 +23,6 @@ enum SortBy: String, Codable,CaseIterable {
 
 struct MovieFilters: Codable, Equatable {
     var includeAdult: Bool?
-    var includeVideo: Bool?
     var language: String?
     var region:  String?
     var sortBy: SortBy?
@@ -36,7 +35,6 @@ struct MovieFilters: Codable, Equatable {
     
     init(includeAdult: Bool? = nil, includeVideo: Bool? = nil, language: String? = nil, region: String? = nil, sortBy: SortBy? = nil, voteAverageGte: Double? = nil, voteAverageLte: Double? = nil, withGenres: [Int]? = nil, withOriginCountry: String? = nil, withOriginalLanguage: String? = nil, year: Int? = nil) {
         self.includeAdult = includeAdult
-        self.includeVideo = includeVideo
         self.language = language
         self.region = region
         self.sortBy = sortBy
@@ -48,18 +46,21 @@ struct MovieFilters: Codable, Equatable {
         self.year = year
     }
     
-    
-    enum CodingKeys: String, CodingKey {
-        case includeAdult = "include_adult"
-        case includeVideo = "include_video"
-        case language
-        case region
-        case sortBy = "sort_by"
-        case voteAverageGte = "vote_average.gte"
-        case voteAverageLte = "vote_average.lte"
-        case withGenres = "with_genres"
-        case withOriginCountry = "with_origin_country"
-        case withOriginalLanguage = "with_original_language"
-        case year
+    func toQueryItems() -> [URLQueryItem] {
+        var items: [URLQueryItem] = []
+        
+        if let includeAdult {items.append(URLQueryItem(name: "include_adult", value: String(includeAdult))) }
+        if let language {items.append(URLQueryItem(name: "language", value: language))}
+        if let region {items.append(URLQueryItem(name: "region", value: region))}
+        if let sortBy {items.append(URLQueryItem(name: "sort_by", value: sortBy.rawValue))}
+        if let voteAverageGte {items.append(URLQueryItem(name: "vote_average.gte", value: String(voteAverageGte)))}
+        if let voteAverageLte {items.append(URLQueryItem(name: "vote_average.lte", value: String(voteAverageLte)))}
+        if let withGenres, !withGenres.isEmpty{
+            let genresString = withGenres.map(String.init).joined(separator: ",")
+            items.append(URLQueryItem(name: "with_genres", value: genresString))
+        }
+        if let withOriginCountry {items.append(URLQueryItem(name: "with_origin_country", value: withOriginCountry))}
+        if let withOriginalLanguage {items.append(URLQueryItem(name: "with_original_language", value: withOriginalLanguage))}
+        if let year {items.append(URLQueryItem(name: "year", value: String(year)))}
     }
 }
