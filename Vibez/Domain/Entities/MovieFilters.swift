@@ -62,5 +62,6 @@ struct MovieFilters: Codable, Equatable {
         if let withOriginCountry {items.append(URLQueryItem(name: "with_origin_country", value: withOriginCountry))}
         if let withOriginalLanguage {items.append(URLQueryItem(name: "with_original_language", value: withOriginalLanguage))}
         if let year {items.append(URLQueryItem(name: "year", value: String(year)))}
+        return items
     }
 }

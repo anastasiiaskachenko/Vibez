@@ -27,6 +27,8 @@ extension MovieDTO {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
+        let genreIds = genreIds ?? genres?.map(\.id)
+        
         let poster = posterPath.flatMap{ URL(string: "https://image.tmdb.org/t/p/w500\($0)")}
         let backdrop = backdropPath.flatMap{ URL(string: "https://image.tmdb.org/t/p/w780\($0)")}
         
@@ -40,7 +42,7 @@ extension MovieDTO {
             overview: self.overview,
             posterPath: poster,
             mediaType: self.mediaType,
-            genreIds: self.genreIds,
+            genreIds: genreIds ?? [],
             popularity: self.popularity,
             releaseDate: releaseDate.flatMap { dateFormatter.date(from: $0) },
             voteAverage: self.voteAverage,

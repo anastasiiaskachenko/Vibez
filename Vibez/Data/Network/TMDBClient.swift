@@ -50,6 +50,7 @@ final class TMDBClient: TmdbClientProtocol, @unchecked Sendable {
         )
         return response.results
     }
+
     
     func fetchMoviesWithFilters(page: Int = 1, filters: MovieFilters) async throws -> [MovieDTO] {
         var queryItems = [URLQueryItem(name: "page", value: "\(page)")]
@@ -69,12 +70,11 @@ final class TMDBClient: TmdbClientProtocol, @unchecked Sendable {
         cachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
     ) async throws -> T {
         guard var components = URLComponents(string: AppEnvironment.tmdbAPIbaseURL + path) else {
+            print("lalalla", AppEnvironment.tmdbAPIbaseURL + path)
             throw TMDBError.invalidURL
         }
         
-        var allQueryItems = [URLQueryItem(name: "api_key", value: AppEnvironment.tmdbAPIKey)]
-        allQueryItems.append(contentsOf: queryItems)
-        components.queryItems = allQueryItems
+        components.queryItems = queryItems.isEmpty ? nil : queryItems
         
         guard let url = components.url else {
             throw TMDBError.invalidURL
@@ -83,6 +83,7 @@ final class TMDBClient: TmdbClientProtocol, @unchecked Sendable {
         var urlRequest = URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: 30)
         urlRequest.httpMethod = "GET"
         urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+        urlRequest.addValue("Bearer \(AppEnvironment.tmdbAPIKey)", forHTTPHeaderField: "Authorization")
         
         let data: Data
         let response: URLResponse
