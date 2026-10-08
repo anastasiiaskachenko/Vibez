@@ -13,10 +13,10 @@ enum SortBy: String, Codable,CaseIterable {
         switch self {
         case .popularityAsc: "Least popular"
         case .popularityDesc: "Most popular"
-        case .primaryReleaseDateAsc: "Release date(Newest)"
-        case .primaryReleaseDateDesc: "Release date(Oldest)"
-        case .voteAverageAsc: "Highest rated"
-        case .voteAverageDesc: "Lowest rated"
+        case .primaryReleaseDateAsc: "Release date(Oldest)"
+        case .primaryReleaseDateDesc: "Release date(Newest)"
+        case .voteAverageAsc: "Lowest rated"
+        case .voteAverageDesc: "Highest rated"
         }
     }
 }

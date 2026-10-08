@@ -27,7 +27,7 @@ struct MovieDTO: Decodable{
         case genreIds = "genre_ids"
         case genres = "genres"
         case releaseDate = "release_date"
-        case voteAverage = "vote_avarage"
+        case voteAverage = "vote_average"
         case voteCount = "vote_count"
     }
 }
