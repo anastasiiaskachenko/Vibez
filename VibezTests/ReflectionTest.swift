@@ -22,16 +22,14 @@ struct ReflectionStorageTests {
         try storage.saveReflection(reflection: ReflectionModel(movieId: testMovieId, prompt: "What did you learn from this movie", content: "Frogs are green", createdAt: Date.now))
         
         try storage.saveReflection(reflection: ReflectionModel(movieId: testMovieId, prompt: "Who did you like the most", content: "Main characters cat", createdAt: Date.now))
-        print("Reflection 1 and 2 saved successfully")
         
         guard let savedReflectionsByMovie = try storage.fetchReflectionsByMovieId(movieId: testMovieId),
               let _ = savedReflectionsByMovie.first else {
             print("No reflections found for movie id")
             return
         }
+        #expect(savedReflectionsByMovie.count == 2)
         
-        print("Read from disk saved 1 \(savedReflectionsByMovie[0].prompt), answer: \(savedReflectionsByMovie[0].content)")
-        print("Read from disk saved 2 \(savedReflectionsByMovie[1].prompt), answer: \(savedReflectionsByMovie[1].content)")
         
         try storage.updateReflection(byID: savedReflectionsByMovie[0].id, newReflection: ReflectionModel(movieId: testMovieId, prompt: "What did you learn from this movie", content: "Frogs are green, but sometimes yellow", createdAt: Date.now))
         
@@ -40,11 +38,12 @@ struct ReflectionStorageTests {
             return
         }
         
-        print("Read from disk updated \(updatedReflection.prompt), answer: \(updatedReflection.content)")
+        #expect(updatedReflection.content == "Frogs are green, but sometimes yellow")
         
         try storage.deleteReflection(id: updatedReflection.id)
         
-        print("Reflection deleted")
-
+        let deletedReflection = try storage.fetchReflectionById(byID: savedReflectionsByMovie[0].id)
+                
+        #expect(deletedReflection == nil)
     }
 }
