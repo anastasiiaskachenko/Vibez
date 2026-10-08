@@ -6,8 +6,19 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		89A050D93077D7AA00B1AFC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = Vibez;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* Vibez.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vibez.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89A050D53077D7AA00B1AFC5 /* VibezTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VibezTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -40,10 +51,20 @@
 			path = Vibez;
 			sourceTree = "<group>";
 		};
+		89A050D63077D7AA00B1AFC5 /* VibezTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VibezTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		000000000000000130000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		89A050D23077D7AA00B1AFC5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
 			);
@@ -55,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000010 /* Vibez */,
+				89A050D63077D7AA00B1AFC5 /* VibezTests */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000120 /* Vibez.app */,
+				89A050D53077D7AA00B1AFC5 /* VibezTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,6 +111,27 @@
 			productReference = 000000000000000000000120 /* Vibez.app */;
 			productType = "com.apple.product-type.application";
 		};
+		89A050D43077D7AA00B1AFC5 /* VibezTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89A050DB3077D7AA00B1AFC5 /* Build configuration list for PBXNativeTarget "VibezTests" */;
+			buildPhases = (
+				89A050D13077D7AA00B1AFC5 /* Sources */,
+				89A050D23077D7AA00B1AFC5 /* Frameworks */,
+				89A050D33077D7AA00B1AFC5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				89A050DA3077D7AA00B1AFC5 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				89A050D63077D7AA00B1AFC5 /* VibezTests */,
+			);
+			name = VibezTests;
+			productName = VibezTests;
+			productReference = 89A050D53077D7AA00B1AFC5 /* VibezTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -95,11 +139,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					89A050D43077D7AA00B1AFC5 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 000000000000000100000000;
 					};
 				};
 			};
@@ -118,12 +166,18 @@
 			projectRoot = "";
 			targets = (
 				000000000000000100000000 /* Vibez */,
+				89A050D43077D7AA00B1AFC5 /* VibezTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		000000000000000140000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		89A050D33077D7AA00B1AFC5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -136,7 +190,20 @@
 			files = (
 			);
 		};
+		89A050D13077D7AA00B1AFC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		89A050DA3077D7AA00B1AFC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* Vibez */;
+			targetProxy = 89A050D93077D7AA00B1AFC5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "Vibez" */ = {
@@ -353,6 +420,48 @@
 			};
 			name = Release;
 		};
+		89A050DC3077D7AA00B1AFC5 /* Debug configuration for PBXNativeTarget "VibezTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S772872C68;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "anastasiia-skachenko.VibezTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vibez.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Vibez";
+			};
+			name = Debug;
+		};
+		89A050DD3077D7AA00B1AFC5 /* Release configuration for PBXNativeTarget "VibezTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S772872C68;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "anastasiia-skachenko.VibezTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vibez.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Vibez";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -369,6 +478,14 @@
 			buildConfigurations = (
 				000000000000000111000000 /* Debug configuration for PBXNativeTarget "Vibez" */,
 				000000000000000112000000 /* Release configuration for PBXNativeTarget "Vibez" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		89A050DB3077D7AA00B1AFC5 /* Build configuration list for PBXNativeTarget "VibezTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89A050DC3077D7AA00B1AFC5 /* Debug configuration for PBXNativeTarget "VibezTests" */,
+				89A050DD3077D7AA00B1AFC5 /* Release configuration for PBXNativeTarget "VibezTests" */,
 			);
 			defaultConfigurationName = Release;
 		};
