@@ -10,7 +10,8 @@ struct MovieDTO: Decodable{
     var overview: String
     var posterPath: String?
     var mediaType: String?
-    var genreIds: [Int]
+    var genreIds: [Int]?
+    var genres: [Genre]?
     var popularity: Double
     var releaseDate: String?
     var voteAverage: Decimal?
@@ -24,8 +25,9 @@ struct MovieDTO: Decodable{
         case posterPath = "poster_path"
         case mediaType = "media_type"
         case genreIds = "genre_ids"
+        case genres = "genres"
         case releaseDate = "release_date"
-        case voteAverage = "vote_avarage"
+        case voteAverage = "vote_average"
         case voteCount = "vote_count"
     }
 }
