@@ -3,7 +3,7 @@ import SwiftData
 
 
 @MainActor
-final class LocalMovieStorage {
+final class LocalUserMovieStorage {
     private let container: ModelContainer
     private let context: ModelContext
     
