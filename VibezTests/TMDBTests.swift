@@ -5,8 +5,8 @@ import Testing
 
 @MainActor
 
-struct UserMovieStorageTests {
-    func testTMDBCalls() async throws {
+struct TMDBClientTests {
+    @Test func testTMDBCalls() async throws {
         let client = TMDBClient()
  
         let genres = try await client.fetchGenres()
@@ -17,10 +17,10 @@ struct UserMovieStorageTests {
         
         let moviesByQuery = try await client.fetchMoviesSearch(query: "Spider-Man")
         
-        #expect(genres.count == 16)
+        #expect(genres.count == 19)
         #expect(genres.contains(where: {$0.name == "Mystery"}))
         
-        #expect(moviesInUkrainian.contains(where: {$0.title == "Людина-мураха та Оса: Квантоманія"}))
+        #expect(moviesInUkrainian.contains(where: {$0.title == "Людина-павук: Абсолютно новий день"}))
         #expect(moviesForChildren.allSatisfy { $0.adult == false })
         
         #expect(movieByID.id == 569094)
