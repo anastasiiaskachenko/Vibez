@@ -5,6 +5,7 @@ enum TMDBError: Error, LocalizedError {
     case invalidResponse
     case httpError(statusCode: Int)
     case decodingError(Error)
+    case notFound
     
     var errorDescription: String? {
         switch self {
@@ -16,6 +17,8 @@ enum TMDBError: Error, LocalizedError {
             return "TMDB API returned HTTP status \(statusCode)."
         case .decodingError(let error):
             return "Failed to parse TMDB response: \(error.localizedDescription)"
+        case .notFound:
+            return "No movie found"
         }
     }
 }
