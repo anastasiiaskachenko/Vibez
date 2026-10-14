@@ -1,0 +1,4 @@
+API_HOST = api.themoviedb.org
+API_KEY =
+
+#include? "Development.xcconfig"
