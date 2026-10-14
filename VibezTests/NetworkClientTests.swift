@@ -14,7 +14,7 @@ struct NetworkClientTests {
 
     @Test func testMoviesSearchFetch() async throws {
         let client = NetworkClient()
-        let moviesSearchResponse = try await client.send(GetMoviesSearchRequest(query: "Fight" ))
+        let moviesSearchResponse = try await client.send(GetMoviesSearchRequest(query: "Fight"))
 
         #expect(moviesSearchResponse.results.contains(where: { $0.title == "Fight Club" }))
     }

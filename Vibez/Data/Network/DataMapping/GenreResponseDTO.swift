@@ -8,3 +8,12 @@ extension GenreResponseDTO {
             var name: String
         }
 }
+
+extension GenreResponseDTO.GenreDTO {
+    func toDomain() -> Genre {
+        return Genre(
+            id: self.id,
+            name: self.name
+        )
+    }
+}

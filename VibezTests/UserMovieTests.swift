@@ -5,17 +5,33 @@ import Testing
 
 @MainActor
 struct UserMovieStorageTests {
-    private func makeInMemoryStorage() throws -> LocalUserMovieStorage {
+    private let testMovieId = 505
+    private func makeInMemoryStorage() throws -> UserMovieStorage {
             let schema = Schema([UserMovieModel.self])
             let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
             let container = try ModelContainer(for: schema, configurations: [config])
-            return LocalUserMovieStorage(container: container)
+            return UserMovieStorage(container: container)
         }
 
-    @Test func testUsingUserMovieStorage() throws {
+    @Test func testGetUserMovie() throws {
         let storage = try makeInMemoryStorage()
-        let testMovieId = 505
 
+        if try storage.fetchUserMovie(byID: testMovieId) != nil {
+            try storage.deleteUserMovie(movieId: testMovieId)
+        }
+
+        try storage.saveUserMovie(movieId: testMovieId)
+
+        guard let savedMovie = try storage.fetchUserMovie(byID: testMovieId) else {
+            print("Failed to find user movie")
+            return
+        }
+
+        #expect(savedMovie.movieId == testMovieId)
+    }
+
+    @Test func testToggleIsLiked() throws {
+        let storage = try makeInMemoryStorage()
         if try storage.fetchUserMovie(byID: testMovieId) != nil {
             try storage.deleteUserMovie(movieId: testMovieId)
         }
@@ -37,6 +53,11 @@ struct UserMovieStorageTests {
         }
 
         #expect(updatedMovie.liked == true)
+
+    }
+
+    @Test func testDeleteUserMovie() throws {
+        let storage = try makeInMemoryStorage()
 
         try storage.deleteUserMovie(movieId: testMovieId)
 
