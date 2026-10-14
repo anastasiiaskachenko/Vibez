@@ -1,7 +1,6 @@
 import Foundation
 
-
-struct Genre: Codable {
+struct Genre {
     let id: Int
     var name: String
 }

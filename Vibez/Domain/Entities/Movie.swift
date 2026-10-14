@@ -2,20 +2,19 @@ import Foundation
 
 struct Movie: Identifiable, Equatable {
     let id: Int
-    var adult: Bool
-    var backdropPath: URL?
-    var title: String
-    var originalLanguage: String
-    var originalTitle: String
-    var overview: String
-    var posterPath: URL?
-    var mediaType: String?
-    var genreIds: [Int]
-    var popularity: Double
-    var releaseDate: Date?
-    var voteAverage: Decimal?
-    var voteCount: Int?
-    
+    let adult: Bool
+    let backdropPath: URL?
+    let title: String
+    let originalLanguage: String
+    let originalTitle: String
+    let overview: String
+    let posterPath: URL?
+    let mediaType: String?
+    let genreIds: [Int]
+    let popularity: Double
+    let releaseDate: Date?
+    let voteAverage: Double?
+    let voteCount: Int?
     // User interaction fields
     var isSaved: Bool = false
     var isWatched: Bool  = false

@@ -6,5 +6,9 @@
 	<string>$(API_HOST)</string>
 	<key>API_KEY</key>
 	<string>$(API_KEY)</string>
+	<key>BACKDROP_PATH</key>
+	<string>$(BACKDROP_PATH)</string>
+	<key>POSTER_PATH</key>
+	<string>$(POSTER_PATH)</string>
 </dict>
 </plist>

@@ -34,7 +34,6 @@ struct MovieFilters: Codable, Equatable {
 
     init(
         includeAdult: Bool? = nil,
-        includeVideo: Bool? = nil,
         language: String? = nil,
         region: String? = nil,
         sortBy: SortBy? = nil,

@@ -25,7 +25,7 @@ struct GetGenresRequest: APIRequest {
 }
 
 struct GetMovieByIdRequest: APIRequest {
-    typealias Response = MoviesResponseDTO.MovieDTO
+    typealias Response = MovieDTO
     let endpoint: Endpoint
 
     init(movieId: Int) {

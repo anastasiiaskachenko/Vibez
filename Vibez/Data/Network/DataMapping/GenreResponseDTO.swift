@@ -1,4 +1,10 @@
+struct GenreResponseDTO: Decodable {
+    let genres: [GenreDTO]
+}
 
-struct GenreResponseDTO: Codable {
-    let genres: [Genre]
+extension GenreResponseDTO {
+    struct GenreDTO: Decodable {
+            let id: Int
+            var name: String
+        }
 }

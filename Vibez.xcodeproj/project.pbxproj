@@ -26,27 +26,17 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Development.xcconfig,
+				Info.plist,
 			);
 			target = 000000000000000100000000 /* Vibez */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		898E70763073990900451177 /* Exceptions for "Vibez" folder in "Compile Sources" phase from "Vibez" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 000000000000000120000000 /* Sources */;
-			membershipExceptions = (
-				Development.xcconfig,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		000000000000000000000010 /* Vibez */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				898E70753073990900451177 /* Exceptions for "Vibez" folder in "Vibez" target */,
-				898E70763073990900451177 /* Exceptions for "Vibez" folder in "Compile Sources" phase from "Vibez" target */,
 			);
 			path = Vibez;
 			sourceTree = "<group>";
@@ -188,6 +178,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		89A053A2307F688900B1AFC5 /* Run SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			name = "Run SwiftLint";
 			shellPath = /bin/sh;
 			shellScript = (

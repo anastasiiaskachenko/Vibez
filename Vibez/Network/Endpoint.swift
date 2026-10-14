@@ -9,7 +9,7 @@ enum NetworkError: Error {
     case decodingError(decodingError: Error)
     case serverError(statusCode: Int)
     case unknown(Error)
-    
+
     var errorDescription: String? {
         switch self {
         case .invalidURL:
@@ -44,9 +44,9 @@ enum Endpoint {
         case .moviesSearch, .moviesFilter, .movieById, .genres: return .GET
         }
     }
-    
+
     var queryItems: [URLQueryItem]? {
-        switch self  {
+        switch self {
         case .moviesSearch(let query):
             return [URLQueryItem(name: "query", value: query)]
         case .moviesFilter(let filters):
