@@ -6,8 +6,9 @@ enum HTTPMethod: String {
 
 enum NetworkError: Error {
     case invalidURL
-    case decodingError(decodingError: String)
+    case decodingError(decodingError: Error)
     case serverError(statusCode: Int)
+    case unknown(Error)
     
     var errorDescription: String? {
         switch self {
@@ -16,7 +17,10 @@ enum NetworkError: Error {
         case .serverError(let statusCode):
             return "TMDB API returned HTTP status \(statusCode)."
         case .decodingError(let error):
-            return "Failed to parse TMDB response: \(error.debugDescription)"
+            return "Failed to parse TMDB response: \(error.localizedDescription)"
+        case .unknown(let error):
+            return "An unexpected error occured: \(error.localizedDescription)"
+        }
     }
 }
 
@@ -49,9 +53,5 @@ enum Endpoint {
             return filters.toQueryItems()
         case .movieById, .genres: return nil
         }
-        
     }
 }
-
-
-

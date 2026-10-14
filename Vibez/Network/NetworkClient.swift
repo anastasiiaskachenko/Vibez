@@ -31,7 +31,7 @@ final class NetworkClient {
         do {
             return try JSONDecoder().decode(T.Response.self, from: data)
         } catch {
-            throw NetworkError.decodingError
+            throw NetworkError.decodingError(decodingError: error)
         }
     }
 }
