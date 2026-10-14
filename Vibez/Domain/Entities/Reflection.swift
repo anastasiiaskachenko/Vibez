@@ -6,8 +6,7 @@ struct Reflection: Identifiable, Equatable {
     var prompt: String?
     var content: String
     let createdAt: Date
-    
-    
+
     init(id: UUID = UUID(), movieId: String, prompt: String? = nil, content: String, createdAt: Date) {
         self.id = id
         self.movieId = movieId
