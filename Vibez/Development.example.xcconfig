@@ -1,2 +1,6 @@
-API_BASE_URL = BASE_URL
+SLASH = /
+
+API_HOST = api.themoviedb.org
 API_KEY = YOUR_API_KEY_HERE
+POSTER_PATH = https:$(SLASH)/image.tmdb.org/t/p/w500
+BACKDROP_PATH = https:$(SLASH)/image.tmdb.org/t/p/w780

@@ -1,0 +1,8 @@
+SLASH = /
+
+API_HOST = api.themoviedb.org
+API_KEY =
+POSTER_PATH = https:$(SLASH)/image.tmdb.org/t/p/w500
+BACKDROP_PATH = https:$(SLASH)/image.tmdb.org/t/p/w780
+
+#include? "Development.xcconfig"

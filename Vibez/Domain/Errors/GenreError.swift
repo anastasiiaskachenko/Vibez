@@ -1,6 +1,6 @@
 import Foundation
 
 enum GenreError: Error, Equatable {
-    case NetworkError
+    case networkError
     case unknown(String)
 }
