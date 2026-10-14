@@ -16,8 +16,6 @@ extension APIRequest {
             components.queryItems = queryItems
         }
         
-        
-        
         return components.url
     }
 }

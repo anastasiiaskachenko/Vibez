@@ -1,8 +1,8 @@
 import Foundation
 
 enum MovieError: Error, Equatable {
-    case NetworkError
-    case MovieNotFound
-    case InvalidFilters
+    case networkError
+    case movieNotFound
+    case invalidFilters
     case unknown(String)
 }
