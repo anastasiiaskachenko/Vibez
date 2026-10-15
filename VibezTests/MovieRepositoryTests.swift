@@ -10,20 +10,6 @@ struct MovieRepositoryTests {
     var userMovieStore: UserMovieStorage
     private let testMovieId = 505
 
-    private func reflectionMakeInMemoryStorage() throws -> ReflectionStorage {
-        let schema = Schema([ReflectionModel.self])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: schema, configurations: [config])
-        return ReflectionStorage(container: container)
-    }
-
-    private func userMovieMakeInMemoryStorage() throws -> UserMovieStorage {
-        let schema = Schema([UserMovieModel.self])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: schema, configurations: [config])
-        return UserMovieStorage(container: container)
-    }
-
     init() throws {
         let schemaReflection = Schema([ReflectionModel.self])
         let configReflection = ModelConfiguration(schema: schemaReflection, isStoredInMemoryOnly: true)
