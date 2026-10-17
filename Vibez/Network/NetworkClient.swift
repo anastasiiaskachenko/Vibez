@@ -1,7 +1,13 @@
 import Foundation
 
 final class NetworkClient {
-    func send<T: APIRequest>(_ request: T, allowRetry: Bool = true) async throws -> T.Response {
+    private static let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+    
+    func send<T: APIRequest>(_ request: T) async throws -> T.Response {
         guard let url = request.url else {
             throw NetworkError.invalidURL
         }
@@ -19,7 +25,7 @@ final class NetworkClient {
         }
 
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw NetworkError.unknown(NSError(domain: "Invalid response", code: 0))
+            throw NetworkError.invalidResponse
         }
 
         guard (200..<300).contains(httpResponse.statusCode) else {
@@ -27,7 +33,7 @@ final class NetworkClient {
         }
 
         do {
-            return try JSONDecoder().decode(T.Response.self, from: data)
+            return try Self.decoder.decode(T.Response.self, from: data)
         } catch {
             throw NetworkError.decodingError(decodingError: error)
         }

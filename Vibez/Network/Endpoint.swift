@@ -4,26 +4,6 @@ enum HTTPMethod: String {
     case GET
 }
 
-enum NetworkError: Error {
-    case invalidURL
-    case decodingError(decodingError: Error)
-    case serverError(statusCode: Int)
-    case unknown(Error)
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:
-            return "The requested URL was invalid."
-        case .serverError(let statusCode):
-            return "TMDB API returned HTTP status \(statusCode)."
-        case .decodingError(let error):
-            return "Failed to parse TMDB response: \(error.localizedDescription)"
-        case .unknown(let error):
-            return "An unexpected error occured: \(error.localizedDescription)"
-        }
-    }
-}
-
 enum Endpoint {
     case moviesSearch(query: String)
     case moviesFilter(filters: MovieFilters)

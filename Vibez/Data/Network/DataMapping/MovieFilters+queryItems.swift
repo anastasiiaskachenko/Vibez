@@ -1,61 +1,6 @@
 import Foundation
 
-enum SortBy: String, Codable, CaseIterable {
-    case popularityAsc = "popularity.asc"
-    case popularityDesc = "popularity.desc"
-    case primaryReleaseDateAsc = "primary_release_date.asc"
-    case primaryReleaseDateDesc = "primary_release_date.desc"
-    case voteAverageAsc = "vote_average.asc"
-    case voteAverageDesc = "vote_average.desc"
-
-    var displayName: String {
-        switch self {
-        case .popularityAsc: "Least popular"
-        case .popularityDesc: "Most popular"
-        case .primaryReleaseDateAsc: "Release date(Oldest)"
-        case .primaryReleaseDateDesc: "Release date(Newest)"
-        case .voteAverageAsc: "Lowest rated"
-        case .voteAverageDesc: "Highest rated"
-        }
-    }
-}
-
-struct MovieFilters: Codable, Equatable {
-    var includeAdult: Bool?
-    var language: String?
-    var region: String?
-    var sortBy: SortBy?
-    var voteAverageGte: Double?
-    var voteAverageLte: Double?
-    var withGenres: [Int]?
-    var withOriginCountry: String?
-    var withOriginalLanguage: String?
-    var year: Int?
-
-    init(
-        includeAdult: Bool? = nil,
-        language: String? = nil,
-        region: String? = nil,
-        sortBy: SortBy? = nil,
-        voteAverageGte: Double? = nil,
-        voteAverageLte: Double? = nil,
-        withGenres: [Int]? = nil,
-        withOriginCountry: String? = nil,
-        withOriginalLanguage: String? = nil,
-        year: Int? = nil
-    ) {
-        self.includeAdult = includeAdult
-        self.language = language
-        self.region = region
-        self.sortBy = sortBy
-        self.voteAverageGte = voteAverageGte
-        self.voteAverageLte = voteAverageLte
-        self.withGenres = withGenres
-        self.withOriginCountry = withOriginCountry
-        self.withOriginalLanguage = withOriginalLanguage
-        self.year = year
-    }
-
+extension MovieFilters {
     func toQueryItems() -> [URLQueryItem] {
         var items: [URLQueryItem] = []
         if let includeAdult {items.append(URLQueryItem(name: "include_adult", value: String(includeAdult))) }
