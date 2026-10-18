@@ -16,13 +16,13 @@ struct UserMovieStorageTests {
     @Test func testGetUserMovie() throws {
         let storage = try makeInMemoryStorage()
 
-        if try storage.fetchUserMovie(byID: testMovieId) != nil {
+        if try storage.getUserMovie(movieId: testMovieId) != nil {
             try storage.deleteUserMovie(movieId: testMovieId)
         }
 
-        try storage.saveUserMovie(movieId: testMovieId)
+        try storage.createUserMovie(movieId: testMovieId)
 
-        guard let savedMovie = try storage.fetchUserMovie(byID: testMovieId) else {
+        guard let savedMovie = try storage.getUserMovie(movieId: testMovieId) else {
             print("Failed to find user movie")
             return
         }
@@ -32,27 +32,27 @@ struct UserMovieStorageTests {
 
     @Test func testToggleIsLiked() throws {
         let storage = try makeInMemoryStorage()
-        if try storage.fetchUserMovie(byID: testMovieId) != nil {
+        if try storage.getUserMovie(movieId: testMovieId) != nil {
             try storage.deleteUserMovie(movieId: testMovieId)
         }
 
-        try storage.saveUserMovie(movieId: testMovieId)
+        try storage.createUserMovie(movieId: testMovieId)
 
-        guard let savedMovie = try storage.fetchUserMovie(byID: testMovieId) else {
+        guard let savedMovie = try storage.getUserMovie(movieId: testMovieId) else {
             print("Failed to find user movie")
             return
         }
 
         #expect(savedMovie.movieId == testMovieId)
 
-        try storage.toggleUserMovieIsLiked(movieId: testMovieId)
+        try storage.toggleUserMovieParam(movieId: testMovieId, param: .isLiked)
 
-        guard let updatedMovie = try storage.fetchUserMovie(byID: testMovieId) else {
+        guard let updatedMovie = try storage.getUserMovie(movieId: testMovieId) else {
             print("Failed to find user movie")
             return
         }
 
-        #expect(updatedMovie.liked == true)
+        #expect(updatedMovie.isLiked == true)
 
     }
 
@@ -61,7 +61,7 @@ struct UserMovieStorageTests {
 
         try storage.deleteUserMovie(movieId: testMovieId)
 
-        let deletedMovie = try storage.fetchUserMovie(byID: testMovieId)
+        let deletedMovie = try storage.getUserMovie(movieId: testMovieId)
 
         #expect(deletedMovie == nil)
 

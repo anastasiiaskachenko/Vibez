@@ -85,7 +85,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
         #expect(createdReflection[0].movieId == testMovieId)
     }
 
@@ -97,7 +97,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
 
         try repository.updateReflection(id: createdReflection[0].id, newReflection: Reflection(
             movieId: testMovieId,
@@ -106,7 +106,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        guard let updatedReflection = try repository.fetchReflectionById(id: createdReflection[0].id) else {
+        guard let updatedReflection = try repository.getReflectionById(id: createdReflection[0].id) else {
             print("No such reflection")
             return
         }
@@ -121,32 +121,32 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
         try repository.deleteReflection(id: createdReflection[0].id)
-        let deletedReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let deletedReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
         #expect(deletedReflection.count == 0)
     }
 
     // test user movie interactions
 
     @Test func testToggleIsLiked() throws {
-        try userMovieStore.saveUserMovie(movieId: testMovieId)
+        try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsLiked(id: testMovieId)
-        let updatedUserMovie = try userMovieStore.fetchUserMovie(byID: testMovieId)
-        #expect(updatedUserMovie?.liked == true)
+        let updatedUserMovie = try userMovieStore.getUserMovie(movieId: testMovieId)
+        #expect(updatedUserMovie?.isLiked == true)
     }
 
     @Test func testToggleIsSaved() throws {
-        try userMovieStore.saveUserMovie(movieId: testMovieId)
+        try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsSaved(id: testMovieId)
-        let updatedUserMovie = try userMovieStore.fetchUserMovie(byID: testMovieId)
-        #expect(updatedUserMovie?.saved == false)
+        let updatedUserMovie = try userMovieStore.getUserMovie(movieId: testMovieId)
+        #expect(updatedUserMovie?.isSaved == true)
     }
 
     @Test func testToggleIsWatched() throws {
-        try userMovieStore.saveUserMovie(movieId: testMovieId)
+        try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsWatched(id: testMovieId)
-        let updatedUserMovie = try userMovieStore.fetchUserMovie(byID: testMovieId)
-        #expect(updatedUserMovie?.watched == true)
+        let updatedUserMovie = try userMovieStore.getUserMovie(movieId: testMovieId)
+        #expect(updatedUserMovie?.isWatched == true)
     }
 }
