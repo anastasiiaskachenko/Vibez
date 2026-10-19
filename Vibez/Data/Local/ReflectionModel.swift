@@ -1,7 +1,6 @@
 import Foundation
 import SwiftData
 
-
 @Model
 final class ReflectionModel: Identifiable {
     @Attribute(.unique) var id: UUID
@@ -9,7 +8,6 @@ final class ReflectionModel: Identifiable {
     var prompt: String
     var content: String
     var createdAt: Date
-
 
     init(movieId: Int, prompt: String, content: String, createdAt: Date) {
         self.id = UUID()

@@ -1,0 +1,37 @@
+import Foundation
+
+enum HTTPMethod: String {
+    case GET
+}
+
+enum Endpoint {
+    case moviesSearch(query: String)
+    case moviesFilter(filters: MovieFilters)
+    case movieById(movieId: Int)
+    case genres
+
+    var path: String {
+        switch self {
+        case .moviesSearch: return "/3/search/movie"
+        case .moviesFilter: return "/3/discover/movie"
+        case .movieById(let movieId): return "/3/movie/\(movieId)"
+        case .genres: return "/3/genre/movie/list"
+        }
+    }
+
+    var method: HTTPMethod {
+        switch self {
+        case .moviesSearch, .moviesFilter, .movieById, .genres: return .GET
+        }
+    }
+
+    var queryItems: [URLQueryItem]? {
+        switch self {
+        case .moviesSearch(let query):
+            return [URLQueryItem(name: "query", value: query)]
+        case .moviesFilter(let filters):
+            return filters.toQueryItems()
+        case .movieById, .genres: return nil
+        }
+    }
+}
