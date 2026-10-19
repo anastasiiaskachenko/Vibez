@@ -18,7 +18,7 @@ struct MovieRepository: MovieRepositoryProtocol {
         self.reflectionStore = reflectionStore
     }
 
-    // Pass-throughs tmdb funcs
+    // MARK: Pass-throughs tmdb funcs
 
     func getGenres() async throws -> [Genre] {
         let genresDTO = try await tmdbClient.send(GetGenresRequest())
@@ -35,52 +35,49 @@ struct MovieRepository: MovieRepositoryProtocol {
         return moviesDTO.results.map { $0.toDomain() }
     }
 
-    // puts together local stored data and tmdb details
+    // MARK: Put together local stored data and tmdb details
     func getMovieById(movieId: Int) async throws -> Movie {
         let movieDTO = try await tmdbClient.send(GetMovieByIdRequest(movieId: movieId))
 
-        guard let userInteractions = try userMovieStore.fetchUserMovie(byID: movieDTO.id) else {
-            try userMovieStore.saveUserMovie(movieId: movieDTO.id, isLiked: false, isWatched: false, isSaved: false)
-            return movieDTO.toDomain(isSaved: false, isLiked: false, isWatched: false)
-        }
+        let userInteractions = try userMovieStore.fetchUserMovie(byMovieID: movieDTO.id)
 
         return movieDTO.toDomain(
-            isSaved: userInteractions.saved,
-            isLiked: userInteractions.liked,
-            isWatched: userInteractions.watched
+            isSaved: userInteractions?.isSaved ?? false,
+            isLiked: userInteractions?.isLiked ?? false,
+            isWatched: userInteractions?.isWatched  ?? false
         )
     }
 
-    // pass-through user interactions
+    // MARK: Pass-through user interactions
 
     func toggleUserMovieIsLiked(id: Int) throws {
-        try userMovieStore.toggleUserMovieIsLiked(movieId: id)
+        try userMovieStore.toggleUserMovieParam(movieId: id, param: .isLiked)
     }
 
     func toggleUserMovieIsSaved(id: Int) throws {
-        try userMovieStore.toggleUserMovieIsSaved(movieId: id)
+        try userMovieStore.toggleUserMovieParam(movieId: id, param: .isSaved)
     }
 
     func toggleUserMovieIsWatched(id: Int) throws {
-        try userMovieStore.toggleUserMovieIsWatched(movieId: id)
+        try userMovieStore.toggleUserMovieParam(movieId: id, param: .isWatched)
     }
 
-    // pass-through reflections
+    // MARK: Pass-through reflections
     func createReflection(reflection: Reflection) throws {
-        try reflectionStore.saveReflection(reflection: reflection)
+        try reflectionStore.createReflection(reflection: reflection)
     }
 
-    func fetchReflectionsByMovieId(movieId: Int) throws -> [Reflection] {
-        let reflectionModels = try reflectionStore.fetchReflectionsByMovieId(movieId: movieId)
+    func fetchReflections(byMovieID movieId: Int) throws -> [Reflection] {
+        let reflectionModels = try reflectionStore.fetchReflections(byMovieID: movieId)
         return reflectionModels.map { $0.toDomain() }
     }
 
-    func fetchReflectionById(id: UUID) throws -> Reflection? {
-        try reflectionStore.fetchReflectionById(byID: id)?.toDomain()
+    func fetchReflection(byID id: UUID) throws -> Reflection? {
+        try reflectionStore.fetchReflection(byID: id)?.toDomain()
     }
 
     func updateReflection(id: UUID, newReflection: Reflection) throws {
-        try reflectionStore.updateReflection(byID: id, newReflection: newReflection)
+        try reflectionStore.updateReflection(id: id, newReflection: newReflection)
     }
 
     func deleteReflection(id: UUID) throws {

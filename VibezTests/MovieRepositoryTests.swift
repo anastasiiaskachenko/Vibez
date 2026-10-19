@@ -6,10 +6,14 @@ import Testing
 @MainActor
 struct MovieRepositoryTests {
     var repository: MovieRepository
+    var userMovieStore: UserMovieStorage
+    var reflectionStore: ReflectionStorage
     private let testMovieId = 505
 
     init() throws {
-        let storage = try makeContainer(inMemory: true)
+        let storage = makeContainer(inMemory: true)
+        self.userMovieStore = storage.userMovieStore
+        self.reflectionStore = storage.reflectionStore
 
         self.repository = MovieRepository(
             tmdbClient: NetworkClient(),
@@ -61,7 +65,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.fetchReflections(byMovieID: testMovieId)
         #expect(createdReflection[0].movieId == testMovieId)
     }
 
@@ -73,7 +77,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.fetchReflections(byMovieID: testMovieId)
 
         try repository.updateReflection(id: createdReflection[0].id, newReflection: Reflection(
             movieId: testMovieId,
@@ -82,7 +86,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        guard let updatedReflection = try repository.fetchReflectionById(id: createdReflection[0].id) else {
+        guard let updatedReflection = try repository.fetchReflection(byID: createdReflection[0].id) else {
             print("No such reflection")
             return
         }
@@ -97,27 +101,35 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.fetchReflections(byMovieID: testMovieId)
         try repository.deleteReflection(id: createdReflection[0].id)
-        let deletedReflection = try repository.fetchReflectionsByMovieId(movieId: testMovieId)
+        let deletedReflection = try repository.fetchReflections(byMovieID: testMovieId)
         #expect(deletedReflection.count == 0)
     }
 
     // test user movie interactions
 
     @Test func testToggleIsLiked() throws {
+
+
         try  repository.toggleUserMovieIsLiked(id: testMovieId)
-        let updatedUserMovie = repository
-        #expect(true)
+        let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
+        #expect(updatedUserMovie != nil)
+        #expect(updatedUserMovie?.isLiked == true)
     }
 
     @Test func testToggleIsSaved() throws {
         try  repository.toggleUserMovieIsSaved(id: testMovieId)
-        #expect(true)
+        let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
+        #expect(updatedUserMovie != nil)
+        #expect(updatedUserMovie?.isSaved == true)
     }
 
     @Test func testToggleIsWatched() throws {
         try  repository.toggleUserMovieIsWatched(id: testMovieId)
-        #expect(true)
+        let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
+        #expect(updatedUserMovie != nil)
+        #expect(updatedUserMovie?.isWatched == true)
+
     }
 }
