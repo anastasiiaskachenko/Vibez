@@ -1,29 +1,5 @@
 import Foundation
 
-struct MoviesResponseDTO: Decodable {
-    let page: Int
-    let results: [MovieDTO]
-    let totalPages: Int
-    let totalResults: Int
-}
-
-struct MovieDTO: Decodable {
-    var adult: Bool
-    var backdropPath: String?
-    let id: Int
-    var title: String
-    var originalLanguage: String
-    var originalTitle: String
-    var overview: String
-    var posterPath: String?
-    var mediaType: String?
-    var genreIds: [Int]?
-    var genres: [GenreResponseDTO.GenreDTO]?
-    var popularity: Double
-    var releaseDate: String?
-    var voteAverage: Double?
-    var voteCount: Int?
-}
 
 extension MovieDTO {
     func toDomain(isSaved: Bool = false, isLiked: Bool = false, isWatched: Bool = false) -> Movie {
@@ -58,6 +34,6 @@ private let dateFormatter: DateFormatter = {
     formatter.dateFormat = "yyyy-MM-dd"
     formatter.calendar = Calendar(identifier: .gregorian)
     formatter.timeZone = TimeZone(identifier: "Europe/Stockholm")
-    formatter.locale = Locale(identifier: "sv_SE")
+    formatter.locale = Locale(identifier: "en_US_POSIX")
     return formatter
 }()

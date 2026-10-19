@@ -31,7 +31,7 @@ final class NetworkClient {
         }
 
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw NetworkError.unknown(NSError(domain: "Invalid response", code: 0))
+            throw NetworkError.invalidResponse
         }
 
         guard (200..<300).contains(httpResponse.statusCode) else {

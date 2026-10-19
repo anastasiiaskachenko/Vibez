@@ -4,9 +4,9 @@ struct GenreResponseDTO: Decodable {
 
 extension GenreResponseDTO {
     struct GenreDTO: Decodable {
-            let id: Int
-            var name: String
-        }
+        let id: Int
+        let name: String
+    }
 }
 
 extension GenreResponseDTO.GenreDTO {
