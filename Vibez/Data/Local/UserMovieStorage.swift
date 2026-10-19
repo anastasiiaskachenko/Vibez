@@ -22,7 +22,7 @@ final class UserMovieStorage {
         try context.save()
     }
 
-    func getUserMovie(movieId: Int) throws -> UserMovieModel? {
+    func fetchUserMovie(byMovieID movieId: Int) throws -> UserMovieModel? {
         let descriptor = FetchDescriptor<UserMovieModel>(
             predicate: #Predicate { $0.movieId == movieId }
         )
@@ -32,7 +32,7 @@ final class UserMovieStorage {
     func toggleUserMovieParam(movieId: Int, param: UserMovieToggleParam) throws {
         var userMovie: UserMovieModel
         
-        if let existing = try getUserMovie(movieId: movieId) {
+        if let existing = try fetchUserMovie(byMovieID: movieId) {
             userMovie = existing
         } else {
             let newModel = UserMovieModel(movieId: movieId)
@@ -52,7 +52,7 @@ final class UserMovieStorage {
     }
 
     func deleteUserMovie(movieId: Int) throws {
-        guard let userMovie = try getUserMovie(movieId: movieId) else { return }
+        guard let userMovie = try fetchUserMovie(byMovieID: movieId) else { return }
         context.delete(userMovie)
         try context.save()
     }

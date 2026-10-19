@@ -132,21 +132,21 @@ struct MovieRepositoryTests {
     @Test func testToggleIsLiked() throws {
         try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsLiked(id: testMovieId)
-        let updatedUserMovie = try userMovieStore.getUserMovie(movieId: testMovieId)
+        let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie?.isLiked == true)
     }
 
     @Test func testToggleIsSaved() throws {
         try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsSaved(id: testMovieId)
-        let updatedUserMovie = try userMovieStore.getUserMovie(movieId: testMovieId)
+        let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie?.isSaved == true)
     }
 
     @Test func testToggleIsWatched() throws {
         try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsWatched(id: testMovieId)
-        let updatedUserMovie = try userMovieStore.getUserMovie(movieId: testMovieId)
+        let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie?.isWatched == true)
     }
 }

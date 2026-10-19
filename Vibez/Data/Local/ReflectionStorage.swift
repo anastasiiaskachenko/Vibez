@@ -22,14 +22,14 @@ final class ReflectionStorage {
         try context.save()
     }
 
-    func getReflectionById(id: UUID) throws -> ReflectionModel? {
+    func fetchReflection(byID id: UUID) throws -> ReflectionModel? {
         let descriptor = FetchDescriptor<ReflectionModel>(
             predicate: #Predicate { $0.id == id }
         )
         return try context.fetch(descriptor).first
     }
 
-    func getReflectionsByMovieId(movieId: Int) throws -> [ReflectionModel] {
+    func fetchReflections(byMovieID movieId: Int) throws -> [ReflectionModel] {
         let descriptor = FetchDescriptor<ReflectionModel>(
             predicate: #Predicate { $0.movieId == movieId }
         )
@@ -37,7 +37,7 @@ final class ReflectionStorage {
     }
 
     func updateReflection(id: UUID, newReflection: Reflection) throws {
-        guard let reflection = try getReflectionById(id: id) else { return }
+        guard let reflection = try fetchReflection(byID: id) else { return }
         reflection.prompt = newReflection.prompt
         reflection.content = newReflection.content
         if context.hasChanges {
@@ -46,7 +46,7 @@ final class ReflectionStorage {
     }
 
     func deleteReflection(id: UUID) throws {
-        guard let reflection = try getReflectionById(id: id) else { return }
+        guard let reflection = try fetchReflection(byID: id) else { return }
         context.delete(reflection)
         try context.save()
     }

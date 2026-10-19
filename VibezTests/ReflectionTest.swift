@@ -24,7 +24,7 @@ struct ReflectionStorageTests {
                                         content: "Frogs are green",
                                         updatedAt: Date.now
                                     ))
-        let savedReflectionsByMovie = try storage.getReflectionsByMovieId(movieId: testMovieId)
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
 
         #expect(savedReflectionsByMovie[0].movieId == testMovieId)
     }
@@ -48,7 +48,7 @@ struct ReflectionStorageTests {
                                         updatedAt: Date.now
                                     ))
 
-        let savedReflectionsByMovie = try storage.getReflectionsByMovieId(movieId: testMovieId)
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
 
         #expect(savedReflectionsByMovie.count == 2)
     }
@@ -62,7 +62,7 @@ struct ReflectionStorageTests {
                                         content: "Frogs are green",
                                         updatedAt: Date.now
                                     ))
-        let savedReflectionsByMovie = try storage.getReflectionsByMovieId(movieId: testMovieId)
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
 
         try storage.updateReflection(id: savedReflectionsByMovie[0].id, newReflection:
                                         Reflection(
@@ -72,7 +72,7 @@ struct ReflectionStorageTests {
                                             updatedAt: Date.now
                                         ))
 
-        guard let updatedReflection = try storage.getReflectionById(id: savedReflectionsByMovie[0].id) else {
+        guard let updatedReflection = try storage.fetchReflection(byID: savedReflectionsByMovie[0].id) else {
             print("Failed to find updated movie review")
             return
         }
@@ -89,10 +89,10 @@ struct ReflectionStorageTests {
                                         content: "Frogs are green",
                                         updatedAt: Date.now
                                     ))
-        let savedReflectionsByMovie = try storage.getReflectionsByMovieId(movieId: testMovieId)
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
         try storage.deleteReflection(id: savedReflectionsByMovie[0].id)
 
-        let deletedReflection = try storage.getReflectionById(id: savedReflectionsByMovie[0].id)
+        let deletedReflection = try storage.fetchReflection(byID: savedReflectionsByMovie[0].id)
 
         #expect(deletedReflection == nil)
     }

@@ -39,7 +39,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     func getMovieById(movieId: Int) async throws -> Movie {
         let movieDTO = try await tmdbClient.send(GetMovieByIdRequest(movieId: movieId))
 
-        let userInteractions = try userMovieStore.getUserMovie(movieId: movieDTO.id)
+        let userInteractions = try userMovieStore.fetchUserMovie(byMovieID: movieDTO.id)
 
         return movieDTO.toDomain(
             isSaved: userInteractions?.isSaved ?? false,
@@ -68,12 +68,12 @@ struct MovieRepository: MovieRepositoryProtocol {
     }
 
     func getReflectionsByMovieId(movieId: Int) throws -> [Reflection] {
-        let reflectionModels = try reflectionStore.getReflectionsByMovieId(movieId: movieId)
+        let reflectionModels = try reflectionStore.fetchReflections(byMovieID: movieId)
         return reflectionModels.map { $0.toDomain() }
     }
 
     func getReflectionById(id: UUID) throws -> Reflection? {
-        try reflectionStore.getReflectionById(id: id)?.toDomain()
+        try reflectionStore.fetchReflection(byID: id)?.toDomain()
     }
 
     func updateReflection(id: UUID, newReflection: Reflection) throws {

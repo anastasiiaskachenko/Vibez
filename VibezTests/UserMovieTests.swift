@@ -16,13 +16,13 @@ struct UserMovieStorageTests {
     @Test func testGetUserMovie() throws {
         let storage = try makeInMemoryStorage()
 
-        if try storage.getUserMovie(movieId: testMovieId) != nil {
+        if try storage.fetchUserMovie(byMovieID: testMovieId) != nil {
             try storage.deleteUserMovie(movieId: testMovieId)
         }
 
         try storage.createUserMovie(movieId: testMovieId)
 
-        guard let savedMovie = try storage.getUserMovie(movieId: testMovieId) else {
+        guard let savedMovie = try storage.fetchUserMovie(byMovieID: testMovieId) else {
             print("Failed to find user movie")
             return
         }
@@ -32,13 +32,13 @@ struct UserMovieStorageTests {
 
     @Test func testToggleIsLiked() throws {
         let storage = try makeInMemoryStorage()
-        if try storage.getUserMovie(movieId: testMovieId) != nil {
+        if try storage.fetchUserMovie(byMovieID: testMovieId) != nil {
             try storage.deleteUserMovie(movieId: testMovieId)
         }
 
         try storage.createUserMovie(movieId: testMovieId)
 
-        guard let savedMovie = try storage.getUserMovie(movieId: testMovieId) else {
+        guard let savedMovie = try storage.fetchUserMovie(byMovieID: testMovieId) else {
             print("Failed to find user movie")
             return
         }
@@ -47,7 +47,7 @@ struct UserMovieStorageTests {
 
         try storage.toggleUserMovieParam(movieId: testMovieId, param: .isLiked)
 
-        guard let updatedMovie = try storage.getUserMovie(movieId: testMovieId) else {
+        guard let updatedMovie = try storage.fetchUserMovie(byMovieID: testMovieId) else {
             print("Failed to find user movie")
             return
         }
@@ -61,7 +61,7 @@ struct UserMovieStorageTests {
 
         try storage.deleteUserMovie(movieId: testMovieId)
 
-        let deletedMovie = try storage.getUserMovie(movieId: testMovieId)
+        let deletedMovie = try storage.fetchUserMovie(byMovieID: testMovieId)
 
         #expect(deletedMovie == nil)
 
