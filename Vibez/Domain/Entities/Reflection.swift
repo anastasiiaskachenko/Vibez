@@ -2,16 +2,16 @@ import Foundation
 
 struct Reflection: Identifiable, Equatable {
     let id: UUID
-    let movieId: String
+    let movieId: Int
     var prompt: String?
     var content: String
-    let createdAt: Date
+    let updatedAt: Date
 
-    init(id: UUID = UUID(), movieId: String, prompt: String? = nil, content: String, createdAt: Date) {
+    init(id: UUID = UUID(), movieId: Int, prompt: String?, content: String, updatedAt: Date) {
         self.id = id
         self.movieId = movieId
         self.prompt = prompt
         self.content = content
-        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
 }

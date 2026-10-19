@@ -11,27 +11,33 @@ final class ReflectionStorage {
         self.context = container.mainContext
     }
 
-    func saveReflection(reflection: ReflectionModel) throws {
-        context.insert(reflection)
+    func createReflection(reflection: Reflection) throws {
+        let reflectionModel = ReflectionModel(
+            movieId: reflection.movieId,
+            prompt: reflection.prompt,
+            content: reflection.content,
+            updatedAt: reflection.updatedAt
+        )
+        context.insert(reflectionModel)
         try context.save()
     }
 
-    func fetchReflectionById(byID id: UUID) throws -> ReflectionModel? {
+    func fetchReflection(byID id: UUID) throws -> ReflectionModel? {
         let descriptor = FetchDescriptor<ReflectionModel>(
             predicate: #Predicate { $0.id == id }
         )
         return try context.fetch(descriptor).first
     }
 
-    func fetchReflectionsByMovieId( movieId: Int) throws -> [ReflectionModel]? {
+    func fetchReflections(byMovieID movieId: Int) throws -> [ReflectionModel] {
         let descriptor = FetchDescriptor<ReflectionModel>(
             predicate: #Predicate { $0.movieId == movieId }
         )
         return try context.fetch(descriptor)
     }
 
-    func updateReflection(byID id: UUID, newReflection: ReflectionModel) throws {
-        guard let reflection = try fetchReflectionById(byID: id) else { return }
+    func updateReflection(id: UUID, newReflection: Reflection) throws {
+        guard let reflection = try fetchReflection(byID: id) else { return }
         reflection.prompt = newReflection.prompt
         reflection.content = newReflection.content
         if context.hasChanges {
@@ -40,7 +46,7 @@ final class ReflectionStorage {
     }
 
     func deleteReflection(id: UUID) throws {
-        guard let reflection = try fetchReflectionById(byID: id) else { return }
+        guard let reflection = try fetchReflection(byID: id) else { return }
         context.delete(reflection)
         try context.save()
     }

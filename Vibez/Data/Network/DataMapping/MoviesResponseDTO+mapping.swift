@@ -1,7 +1,8 @@
 import Foundation
 
+
 extension MovieDTO {
-    func toDomain(isSaved: Bool = true, isLiked: Bool = false, isWatched: Bool = false) -> Movie {
+    func toDomain(isSaved: Bool = false, isLiked: Bool = false, isWatched: Bool = false) -> Movie {
         let genreIds = genreIds ?? genres?.map(\.id)
         let poster = posterPath.flatMap { URL(string: AppEnvironment.tmdbPosterPath + $0)}
         let backdrop = backdropPath.flatMap { URL(string: AppEnvironment.tmdbBackdropPath + $0)}

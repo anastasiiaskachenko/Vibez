@@ -4,14 +4,14 @@ import SwiftData
 @Model
 final class UserMovieModel: Identifiable {
     @Attribute(.unique) var movieId: Int
-    var liked: Bool
-    var saved: Bool
-    var watched: Bool
+    var isLiked: Bool
+    var isSaved: Bool
+    var isWatched: Bool
 
-    init(movieId: Int, liked: Bool, saved: Bool, watched: Bool) {
+    init(movieId: Int, isLiked: Bool = false, isSaved: Bool = false, isWatched: Bool = false) {
         self.movieId = movieId
-        self.liked = liked
-        self.saved = saved
-        self.watched = watched
+        self.isLiked = isLiked
+        self.isSaved = isSaved
+        self.isWatched = isWatched
     }
 }

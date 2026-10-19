@@ -37,8 +37,8 @@ struct GetMoviesFilterRequest: APIRequest {
     typealias Response = MoviesResponseDTO
     let endpoint: Endpoint
 
-    init(filters: MovieFilters) {
-        self.endpoint = .moviesFilter(filters: filters)
+    init(filters: MovieFilters, page: Int = 1) {
+        self.endpoint = .moviesFilter(filters: filters, page: page)
     }
 }
 
@@ -46,7 +46,7 @@ struct GetMoviesSearchRequest: APIRequest {
     typealias Response = MoviesResponseDTO
     let endpoint: Endpoint
 
-    init(query: String) {
-        self.endpoint = .moviesSearch(query: query)
+    init(query: String, page: Int = 1) {
+        self.endpoint = .moviesSearch(query: query, page: page)
     }
 }

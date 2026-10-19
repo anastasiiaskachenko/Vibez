@@ -1,14 +1,16 @@
+// TODO: Andy please take a look at this. How is it best to handle MovieFilters 
+
 struct MovieFilters: Codable, Equatable {
-    let includeAdult: Bool?
-    let language: String?
-    let region: String?
-    let sortBy: SortBy?
-    let voteAverageGte: Double?
-    let voteAverageLte: Double?
-    let withGenres: [Int]?
-    let withOriginCountry: String?
-    let withOriginalLanguage: String?
-    let year: Int?
+    var includeAdult: Bool?
+    var language: String?
+    var region: String?
+    var sortBy: SortBy?
+    var voteAverageGte: Double?
+    var voteAverageLte: Double?
+    var withGenres: [Int]?
+    var withOriginCountry: String?
+    var withOriginalLanguage: String?
+    var year: Int?
 
     enum SortBy: String, Codable, CaseIterable {
         case popularityAsc = "popularity.asc"

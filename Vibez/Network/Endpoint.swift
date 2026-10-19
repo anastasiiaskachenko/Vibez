@@ -5,8 +5,8 @@ enum HTTPMethod: String {
 }
 
 enum Endpoint {
-    case moviesSearch(query: String)
-    case moviesFilter(filters: MovieFilters)
+    case moviesSearch(query: String, page: Int)
+    case moviesFilter(filters: MovieFilters, page: Int)
     case movieById(movieId: Int)
     case genres
 
@@ -27,10 +27,14 @@ enum Endpoint {
 
     var queryItems: [URLQueryItem]? {
         switch self {
-        case .moviesSearch(let query):
-            return [URLQueryItem(name: "query", value: query)]
-        case .moviesFilter(let filters):
-            return filters.toQueryItems()
+        case .moviesSearch(let query, let page):
+            return [
+                URLQueryItem(name: "query", value: query),
+                URLQueryItem(name: "page", value: String(page))]
+        case .moviesFilter(let filters, let page):
+            var queryItemsFilters = filters.toQueryItems()
+            queryItemsFilters.append(URLQueryItem(name: "page", value: String(page)))
+            return queryItemsFilters
         case .movieById, .genres: return nil
         }
     }

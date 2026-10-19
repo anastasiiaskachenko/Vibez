@@ -6,6 +6,7 @@ import Testing
 @MainActor
 
 struct ReflectionStorageTests {
+    private let testMovieId = 505
     private func makeInMemoryStorage() throws -> ReflectionStorage {
         let schema = Schema([ReflectionModel.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -13,51 +14,85 @@ struct ReflectionStorageTests {
         return ReflectionStorage(container: container)
     }
 
-    @Test func testUsingReflectionStorage() throws {
+    @Test func testSavingReflection() throws {
         let storage = try makeInMemoryStorage()
-        let testMovieId = 505
 
-        try storage.saveReflection(reflection:
-                                    ReflectionModel(
+        try storage.createReflection(reflection:
+                                    Reflection(
                                         movieId: testMovieId,
                                         prompt: "What did you learn from this movie",
                                         content: "Frogs are green",
-                                        createdAt: Date.now
+                                        updatedAt: Date.now
+                                    ))
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
+
+        #expect(savedReflectionsByMovie[0].movieId == testMovieId)
+    }
+
+    @Test func testSaveMultipleReflectionsPerMovie() throws {
+        let storage = try makeInMemoryStorage()
+
+        try storage.createReflection(reflection:
+                                    Reflection(
+                                        movieId: testMovieId,
+                                        prompt: "What did you learn from this movie",
+                                        content: "Frogs are green",
+                                        updatedAt: Date.now
                                     ))
 
-        try storage.saveReflection(reflection:
-                                    ReflectionModel(
+        try storage.createReflection(reflection:
+                                    Reflection(
                                         movieId: testMovieId,
                                         prompt: "Who did you like the most",
                                         content: "Main characters cat",
-                                        createdAt: Date.now
+                                        updatedAt: Date.now
                                     ))
 
-        guard let savedReflectionsByMovie = try storage.fetchReflectionsByMovieId(movieId: testMovieId),
-            savedReflectionsByMovie.first != nil else {
-            print("No reflections found for movie id")
-            return
-        }
-        #expect(savedReflectionsByMovie.count == 2)
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
 
-        try storage.updateReflection(byID: savedReflectionsByMovie[0].id, newReflection:
-                                        ReflectionModel(
+        #expect(savedReflectionsByMovie.count == 2)
+    }
+
+    @Test func testUpdateReflection() throws {
+        let storage = try makeInMemoryStorage()
+        try storage.createReflection(reflection:
+                                    Reflection(
+                                        movieId: testMovieId,
+                                        prompt: "What did you learn from this movie",
+                                        content: "Frogs are green",
+                                        updatedAt: Date.now
+                                    ))
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
+
+        try storage.updateReflection(id: savedReflectionsByMovie[0].id, newReflection:
+                                        Reflection(
                                             movieId: testMovieId,
                                             prompt: "What did you learn from this movie",
                                             content: "Frogs are green, but sometimes yellow",
-                                            createdAt: Date.now
+                                            updatedAt: Date.now
                                         ))
 
-        guard let updatedReflection = try storage.fetchReflectionById(byID: savedReflectionsByMovie[0].id) else {
+        guard let updatedReflection = try storage.fetchReflection(byID: savedReflectionsByMovie[0].id) else {
             print("Failed to find updated movie review")
             return
         }
 
         #expect(updatedReflection.content == "Frogs are green, but sometimes yellow")
+    }
 
-        try storage.deleteReflection(id: updatedReflection.id)
+    @Test func testDeleteReflection() throws {
+        let storage = try makeInMemoryStorage()
+        try storage.createReflection(reflection:
+                                    Reflection(
+                                        movieId: testMovieId,
+                                        prompt: "What did you learn from this movie",
+                                        content: "Frogs are green",
+                                        updatedAt: Date.now
+                                    ))
+        let savedReflectionsByMovie = try storage.fetchReflections(byMovieID: testMovieId)
+        try storage.deleteReflection(id: savedReflectionsByMovie[0].id)
 
-        let deletedReflection = try storage.fetchReflectionById(byID: savedReflectionsByMovie[0].id)
+        let deletedReflection = try storage.fetchReflection(byID: savedReflectionsByMovie[0].id)
 
         #expect(deletedReflection == nil)
     }
