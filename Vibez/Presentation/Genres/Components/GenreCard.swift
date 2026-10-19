@@ -38,7 +38,6 @@ struct GenreCard: View {
                        endPoint: .bottom
                       )
                 }
-
             )
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: .black.opacity(0.25), radius: 8, x: 5, y: 5)

@@ -9,7 +9,7 @@ extension MoviesFilteredView {
         var isLoading: Bool = false
         var errorMessage: String?
         var isLastPage: Bool = false
-        var movieFilters: MovieFilters? = nil
+        var movieFilters: MovieFilters?
 
         init(repository: MovieRepositoryProtocol, movieFilters: MovieFilters? = nil) {
             self.repository = repository
