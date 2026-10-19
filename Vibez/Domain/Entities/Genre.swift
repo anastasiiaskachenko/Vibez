@@ -1,6 +1,6 @@
 import Foundation
 
-struct Genre {
+struct Genre: Identifiable {
     let id: Int
     var name: String
 }

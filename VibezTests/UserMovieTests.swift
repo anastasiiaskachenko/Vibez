@@ -6,15 +6,9 @@ import Testing
 @MainActor
 struct UserMovieStorageTests {
     private let testMovieId = 505
-    private func makeInMemoryStorage() throws -> UserMovieStorage {
-            let schema = Schema([UserMovieModel.self])
-            let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-            let container = try ModelContainer(for: schema, configurations: [config])
-            return UserMovieStorage(container: container)
-        }
 
     @Test func testGetUserMovie() throws {
-        let storage = try makeInMemoryStorage()
+        let storage = makeContainer(inMemory: true).userMovieStore
 
         if try storage.fetchUserMovie(byMovieID: testMovieId) != nil {
             try storage.deleteUserMovie(movieId: testMovieId)
@@ -31,7 +25,7 @@ struct UserMovieStorageTests {
     }
 
     @Test func testToggleIsLiked() throws {
-        let storage = try makeInMemoryStorage()
+        let storage = makeContainer(inMemory: true).userMovieStore
         if try storage.fetchUserMovie(byMovieID: testMovieId) != nil {
             try storage.deleteUserMovie(movieId: testMovieId)
         }
@@ -57,7 +51,7 @@ struct UserMovieStorageTests {
     }
 
     @Test func testDeleteUserMovie() throws {
-        let storage = try makeInMemoryStorage()
+        let storage = makeContainer(inMemory: true).userMovieStore
 
         try storage.deleteUserMovie(movieId: testMovieId)
 

@@ -7,15 +7,9 @@ import Testing
 
 struct ReflectionStorageTests {
     private let testMovieId = 505
-    private func makeInMemoryStorage() throws -> ReflectionStorage {
-        let schema = Schema([ReflectionModel.self])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: schema, configurations: [config])
-        return ReflectionStorage(container: container)
-    }
 
     @Test func testSavingReflection() throws {
-        let storage = try makeInMemoryStorage()
+        let storage = try makeContainer(inMemory: true).reflectionStore
 
         try storage.createReflection(reflection:
                                     Reflection(
@@ -30,7 +24,7 @@ struct ReflectionStorageTests {
     }
 
     @Test func testSaveMultipleReflectionsPerMovie() throws {
-        let storage = try makeInMemoryStorage()
+        let storage = try makeContainer(inMemory: true).reflectionStore
 
         try storage.createReflection(reflection:
                                     Reflection(
@@ -54,7 +48,8 @@ struct ReflectionStorageTests {
     }
 
     @Test func testUpdateReflection() throws {
-        let storage = try makeInMemoryStorage()
+
+        let storage = makeContainer(inMemory: true).reflectionStore
         try storage.createReflection(reflection:
                                     Reflection(
                                         movieId: testMovieId,
@@ -81,7 +76,7 @@ struct ReflectionStorageTests {
     }
 
     @Test func testDeleteReflection() throws {
-        let storage = try makeInMemoryStorage()
+        let storage = makeContainer(inMemory: true).reflectionStore
         try storage.createReflection(reflection:
                                     Reflection(
                                         movieId: testMovieId,

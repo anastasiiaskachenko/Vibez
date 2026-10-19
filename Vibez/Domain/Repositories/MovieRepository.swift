@@ -67,12 +67,12 @@ struct MovieRepository: MovieRepositoryProtocol {
         try reflectionStore.createReflection(reflection: reflection)
     }
 
-    func getReflectionsByMovieId(movieId: Int) throws -> [Reflection] {
+    func fetchReflections(byMovieID movieId: Int) throws -> [Reflection] {
         let reflectionModels = try reflectionStore.fetchReflections(byMovieID: movieId)
         return reflectionModels.map { $0.toDomain() }
     }
 
-    func getReflectionById(id: UUID) throws -> Reflection? {
+    func fetchReflection(byID id: UUID) throws -> Reflection? {
         try reflectionStore.fetchReflection(byID: id)?.toDomain()
     }
 

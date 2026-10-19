@@ -6,39 +6,19 @@ import Testing
 @MainActor
 struct MovieRepositoryTests {
     var repository: MovieRepository
-    var reflectionStore: ReflectionStorage
     var userMovieStore: UserMovieStorage
+    var reflectionStore: ReflectionStorage
     private let testMovieId = 505
 
-    private func reflectionMakeInMemoryStorage() throws -> ReflectionStorage {
-        let schema = Schema([ReflectionModel.self])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: schema, configurations: [config])
-        return ReflectionStorage(container: container)
-    }
-
-    private func userMovieMakeInMemoryStorage() throws -> UserMovieStorage {
-        let schema = Schema([UserMovieModel.self])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: schema, configurations: [config])
-        return UserMovieStorage(container: container)
-    }
-
     init() throws {
-        let schemaReflection = Schema([ReflectionModel.self])
-        let configReflection = ModelConfiguration(schema: schemaReflection, isStoredInMemoryOnly: true)
-        let containerReflection = try ModelContainer(for: schemaReflection, configurations: [configReflection])
-        self.reflectionStore = ReflectionStorage(container: containerReflection)
-
-        let schemaUserMovie = Schema([UserMovieModel.self])
-        let configUserMovie  = ModelConfiguration(schema: schemaUserMovie, isStoredInMemoryOnly: true)
-        let containerUserMovie  = try ModelContainer(for: schemaUserMovie, configurations: [configUserMovie])
-        self.userMovieStore = UserMovieStorage(container: containerUserMovie)
+        let storage = makeContainer(inMemory: true)
+        self.userMovieStore = storage.userMovieStore
+        self.reflectionStore = storage.reflectionStore
 
         self.repository = MovieRepository(
             tmdbClient: NetworkClient(),
-            userMovieStore: userMovieStore,
-            reflectionStore: reflectionStore
+            userMovieStore: storage.userMovieStore,
+            reflectionStore: storage.reflectionStore
         )
     }
 
@@ -85,7 +65,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.fetchReflections(byMovieID: testMovieId)
         #expect(createdReflection[0].movieId == testMovieId)
     }
 
@@ -97,7 +77,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.fetchReflections(byMovieID: testMovieId)
 
         try repository.updateReflection(id: createdReflection[0].id, newReflection: Reflection(
             movieId: testMovieId,
@@ -106,7 +86,7 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        guard let updatedReflection = try repository.getReflectionById(id: createdReflection[0].id) else {
+        guard let updatedReflection = try repository.fetchReflection(byID: createdReflection[0].id) else {
             print("No such reflection")
             return
         }
@@ -121,32 +101,35 @@ struct MovieRepositoryTests {
             updatedAt: Date.now
         ))
 
-        let createdReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
+        let createdReflection = try repository.fetchReflections(byMovieID: testMovieId)
         try repository.deleteReflection(id: createdReflection[0].id)
-        let deletedReflection = try repository.getReflectionsByMovieId(movieId: testMovieId)
+        let deletedReflection = try repository.fetchReflections(byMovieID: testMovieId)
         #expect(deletedReflection.count == 0)
     }
 
     // test user movie interactions
 
     @Test func testToggleIsLiked() throws {
-        try userMovieStore.createUserMovie(movieId: testMovieId)
+
+
         try  repository.toggleUserMovieIsLiked(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
+        #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isLiked == true)
     }
 
     @Test func testToggleIsSaved() throws {
-        try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsSaved(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
+        #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isSaved == true)
     }
 
     @Test func testToggleIsWatched() throws {
-        try userMovieStore.createUserMovie(movieId: testMovieId)
         try  repository.toggleUserMovieIsWatched(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
+        #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isWatched == true)
+
     }
 }
