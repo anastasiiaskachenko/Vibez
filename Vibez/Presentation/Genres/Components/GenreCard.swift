@@ -3,7 +3,7 @@ import SwiftUI
 struct GenreCard: View {
     let genre: Genre
     var body: some View {
-        NavigationLink(destination: TestView()) {
+        NavigationLink(destination: MoviesFilteredView(movieFilters: MovieFilters(withGenres: [genre.id]))) {
             VStack(alignment: .leading) {
                 Spacer()
                 HStack {

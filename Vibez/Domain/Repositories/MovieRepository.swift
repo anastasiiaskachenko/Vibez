@@ -2,7 +2,7 @@ import Foundation
 
 protocol MovieRepositoryProtocol {
     func getGenres() async throws -> [Genre]
-    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> [Movie]
+    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> (movies: [Movie], isLastPage: Bool)
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie]
     func getMovieById(movieId: Int) async throws -> Movie
 }
@@ -26,13 +26,31 @@ struct MovieRepository: MovieRepositoryProtocol {
     }
 
     func getMoviesSearch(query: String, page: Int = 1) async throws -> [Movie] {
+        let genres = try await getGenres()
         let moviesDTO = try await tmdbClient.send(GetMoviesSearchRequest(query: query, page: page))
-        return moviesDTO.results.map { $0.toDomain() }
+        let movies = moviesDTO.results.map { $0.toDomain() }
+        return movies.map { movie in
+            var updatedMovie = movie
+            updatedMovie.genres = movie.genreIds.compactMap { id in
+                genres.first(where: { $0.id == id})
+            }
+            return updatedMovie
+        }
     }
 
-    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> [Movie] {
-        let moviesDTO = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
-        return moviesDTO.results.map { $0.toDomain() }
+    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> (movies: [Movie], isLastPage: Bool) {
+        let genres = try await getGenres()
+        let response = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
+        var isLastPage = response.page >= response.totalPages
+        var movies = response.results.map { $0.toDomain() }
+        movies = movies.map { movie in
+            var updatedMovie = movie
+            updatedMovie.genres = movie.genreIds.compactMap { id in
+                genres.first(where: { $0.id == id})
+            }
+            return updatedMovie
+        }
+        return (movies: movies, isLastPage: isLastPage)
     }
 
     // MARK: Put together local stored data and tmdb details

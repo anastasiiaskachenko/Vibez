@@ -13,7 +13,7 @@ import SwiftUI
     }
     var body: some Scene {
         WindowGroup {
-            MainTabView(repository: repository)
+            MainTabView()
         }
     }
 }
