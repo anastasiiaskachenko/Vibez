@@ -2,8 +2,8 @@ import SwiftUI
 import UIKit
 
 extension Image {
-    init (genreId: Int, fallbackImage: String = "notFound") {
-        let name = "\(genreId)"
+    init (itemId: Int, fallbackImage: String = "notFound") {
+        let name = "\(itemId)"
         if UIImage(named: name) != nil {
             self.init(name)
         } else {

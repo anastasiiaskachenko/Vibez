@@ -3,12 +3,12 @@ import Foundation
 extension GenresView {
     @Observable
     class ViewModel {
-        let repository: MovieRepository
+        let repository: MovieRepositoryProtocol
         var genres: [Genre] = []
         var errorMessage: String?
         var isLoading: Bool = false
     
-        init(repository: MovieRepository) {
+        init(repository: MovieRepositoryProtocol) {
             self.repository = repository
         }
     

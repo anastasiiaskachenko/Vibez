@@ -1,14 +1,22 @@
 import SwiftUI
 
 struct GenresList: View {
-    @State var viewModel: GenresView.ViewModel
+    @State var genres: [Genre]
     var body: some View {
         LazyVGrid(columns: [GridItem(.flexible())], spacing: 16) {
-            ForEach(viewModel.genres) { genre in
+            ForEach(genres) { genre in
                 GenreCard(genre: genre)
             }
         }
-        .padding(24)
         .frame(maxWidth: .infinity)
+    }
+}
+
+#Preview {
+    NavigationStack{
+        GenresList(genres: [
+            Genre(id: 28, name: "Action"),
+            Genre(id: 37, name: "Western")
+        ])
     }
 }
