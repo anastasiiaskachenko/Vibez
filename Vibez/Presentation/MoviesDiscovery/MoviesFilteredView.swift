@@ -34,7 +34,6 @@ struct MoviesFilteredView: View {
         .background(Color.background)
         .foregroundStyle(Color.text)
         .task {
-            print("load is triggered")
             await viewModel.loadMovies()
         }
     }
