@@ -65,7 +65,7 @@ struct MoviesFilteredHero: View {
                         ],
                        startPoint: .top,
                        endPoint: .bottom
-                      )
+                    )
                 }
 
             )
