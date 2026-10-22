@@ -8,7 +8,7 @@ let mockMovie = Movie(
     originalLanguage: "en",
     originalTitle: "Fight Club",
     overview: "An ticking time-bomb insomniac and a slippery soap salesman channel primal male aggression into a shocking new form of therapy.",
-    posterPath: URL(string: "https://image.tmdb.org/t/p/w500/pB8BM8LLE8S1B3PyS24C3R1A23C.jpg"),
+    posterPath: URL(string: "https://image.tmdb.org/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg"),
     mediaType: "movie",
     genreIds: [18, 53],
     genres: [

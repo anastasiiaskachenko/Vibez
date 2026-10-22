@@ -28,96 +28,94 @@ struct MovieDescription: View {
         self.toggleIsWatched = toggleIsWatched
     }
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text(movie.title)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .padding(.horizontal, 6)
-                    .padding(.top, 4)
-                Spacer()
+            VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    Text(metaInfo)
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                    Text("•")
-                    Image(systemName: movie.adult ? "18.circle.fill" : "18.circle")
-                        .foregroundStyle(movie.adult ? .red : .text)
-                }
-            }
-
-            if let genres = movie.genres, !genres.isEmpty  {
-                ScrollView(.horizontal, showsIndicators: false) {
+                    Text(movie.title)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 6)
+                        .padding(.top, 4)
+                    Spacer()
                     HStack {
-                        ForEach(genres) {genre in
-                            NavigationLink { MoviesFilteredView(movieFilters: MovieFilters(withGenres: [genre.id]))
-                            } label: {
-                                Text(genre.name)
-                                .padding(8)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .overlay(RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.secondary, lineWidth: 4)
-                                )
+                        Text(metaInfo)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        Text("•")
+                        Image(systemName: movie.adult ? "18.circle.fill" : "18.circle")
+                            .foregroundStyle(movie.adult ? .red : .text)
+                    }
+                }
+
+                if let genres = movie.genres, !genres.isEmpty  {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(genres) {genre in
+                                NavigationLink { MoviesFilteredView(movieFilters: MovieFilters(withGenres: [genre.id]))
+                                } label: {
+                                    Text(genre.name)
+                                        .padding(8)
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 12)
+                                            .stroke(Color.secondary, lineWidth: 4)
+                                        )
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            Divider()
+                Divider()
 
-            VStack {
                 Text(movie.overview)
-            }
 
-            HStack {
-                Image(systemName: "star.fill")
-                    .foregroundStyle(Color.accent)
-                Text(rating)
-            }
-            Spacer()
-            HStack {
-                NavigationLink{
-                    TestView()
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "bubble.left")
-                            .font(.subheadline)
-                        Text("Reflections")
-                    }
+                HStack {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(Color.accent)
+                    Text(rating)
                 }
-
-                Spacer()
-
-                Group {
-                    if movie.isSaved, !movie.isWatched {
-                        Button("Mark as watched", systemImage: "eye", action: toggleIsWatched)
-                    } else {
-                        Button("Add to Watchlist", systemImage: "bookmark.badge.plus", action: toggleIsSaved)
+                HStack {
+                    NavigationLink{
+                        TestView()
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "brain")
+                                .font(.subheadline)
+                            Text("Reflections")
+                        }
                     }
+
+                    Spacer()
+                    Group {
+                        if movie.isSaved, !movie.isWatched {
+                            Button("Mark as watched", systemImage: "eye", action: toggleIsWatched)
+                        } else {
+                            Button("Add to Watchlist", systemImage: "bookmark.badge.plus", action: toggleIsSaved)
+                        }
+                    }
+                    .buttonStyle(.primaryAction)
                 }
-                .buttonStyle(.primaryAction)
             }
-        }
-        .padding(20)
-        .background(
-            LinearGradient(stops:
-                [
-                    .init(color: .black, location: 0.0),
-                    .init(color: .black, location: 0.6),
-                    .init(color: .clear, location: 1.0)
-                ],
-               startPoint: .bottom,
-               endPoint: .top
+            .padding(20)
+            .background(
+                LinearGradient(stops:
+                                [
+                                    .init(color: .background, location: 0.0),
+                                    .init(color: .background, location: 0.8),
+                                    .init(color: .background.opacity(0.6), location: 0.95),
+                                    .init(color: .background.opacity(0.2), location: 1.0)
+                                ],
+                               startPoint: .bottom,
+                               endPoint: .top
+                              )
             )
-        )
-        .frame( maxWidth: .infinity, alignment: .leading)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12)
-            .stroke(Color.secondary, lineWidth: 2)
-        )
-        .padding(.top, -36)
+            .frame( maxWidth: .infinity, alignment: .trailing)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.secondary, lineWidth: 2)
+                .padding(.bottom, -2)
+                .clipped()
+            )
+
     }
 }
