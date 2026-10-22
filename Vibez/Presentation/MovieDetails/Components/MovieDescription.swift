@@ -118,6 +118,5 @@ struct MovieDescription: View {
                 .padding(.bottom, -2)
                 .clipped()
             )
-
     }
 }

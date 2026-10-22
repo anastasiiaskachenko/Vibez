@@ -51,15 +51,12 @@ extension MovieDetailsView {
         }
 
         func toggleIsLiked() {
-            print("movie var, \(movie)")
             guard var currentMovie = movie else { return }
             currentMovie.isLiked.toggle()
             self.movie = currentMovie
             do {
                 try repository.toggleMovieIsLiked(id: currentMovie.id)
-                print("successfully toggled is liked")
             } catch {
-                print("Failed to toggle is liked on movie, \(error.localizedDescription)")
                 self.errorMessage = "Failed to toggle isLiked on movie \(currentMovie.id): \(error.localizedDescription)"
             }
         }

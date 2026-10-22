@@ -16,38 +16,8 @@ struct MovieDetailsView: View {
                     MovieDescription(movie: movie, toggleIsSaved: viewModel.toggleIsSaved, toggleIsWatched: viewModel.toggleIsWatched)
 
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                // TODO: move this to a component PosterImage(path: movie.posterPath)
-                .background(
-                    KFImage(movie.posterPath)
-                        .placeholder {
-                            ZStack {
-                                Color.background
-                                ProgressView()
-                            }
-                        }
-                        .onFailureView {
-                            Image("notFound")
-                                .resizable()
-                                .scaledToFill()
-                        }
-                        .onFailure { error in
-                            print("Failed to load image \(error)")
-                        }
-                        .resizable()
-                        .scaledToFill()
-                        .mask(
-                            LinearGradient(stops:
-                                            [
-                                                .init(color: .black, location: 0.1),
-                                                .init(color: .black, location: 0.7),
-                                                .init(color: .clear, location: 1.0),
-
-                                            ],
-                                           startPoint: .top,
-                                           endPoint: .bottom
-                                          )
-                        )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)                .background(
+                    MoviePosterWithFallback(posterPath: movie.posterPath)
                         .ignoresSafeArea(edges: .top)
                 )
                 .background(Color.background)
@@ -56,7 +26,6 @@ struct MovieDetailsView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            let _ = print("toggled is liked on movie \(movie.id)")
                             viewModel.toggleIsLiked()
                         } label: {
                             Image(systemName: movie.isLiked ? "heart.fill" : "heart" )

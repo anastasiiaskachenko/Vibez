@@ -73,7 +73,6 @@ struct MovieRepository: MovieRepositoryProtocol {
     // MARK: Pass-through user interactions
 
     func toggleMovieIsLiked(id: Int) throws {
-        debugPrint("is liked is toggled")
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isLiked)
     }
 
