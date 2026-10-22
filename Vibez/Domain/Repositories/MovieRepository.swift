@@ -6,9 +6,9 @@ protocol MovieRepositoryProtocol {
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie]
     func getMovieById(movieId: Int) async throws -> Movie
 
-    func toggleMovieIsSaved(id: Int) throws -> Void
-    func toggleMovieIsWatched(id: Int) throws -> Void
-    func toggleMovieIsLiked(id: Int) throws -> Void
+    func toggleMovieIsSaved(id: Int) throws
+    func toggleMovieIsWatched(id: Int) throws
+    func toggleMovieIsLiked(id: Int) throws
 }
 
 struct MovieRepository: MovieRepositoryProtocol {
@@ -73,6 +73,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     // MARK: Pass-through user interactions
 
     func toggleMovieIsLiked(id: Int) throws {
+        debugPrint("is liked is toggled")
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isLiked)
     }
 

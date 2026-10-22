@@ -89,8 +89,10 @@ struct MovieDescription: View {
                     Group {
                         if movie.isSaved, !movie.isWatched {
                             Button("Mark as watched", systemImage: "eye", action: toggleIsWatched)
+                        } else if movie.isSaved, movie.isWatched {
+                                Button("Watched", systemImage: "checkmark", action: toggleIsWatched)
                         } else {
-                            Button("Add to Watchlist", systemImage: "bookmark.badge.plus", action: toggleIsSaved)
+                            Button("Add to Watchlist", systemImage: "bookmark", action: toggleIsSaved)
                         }
                     }
                     .buttonStyle(.primaryAction)

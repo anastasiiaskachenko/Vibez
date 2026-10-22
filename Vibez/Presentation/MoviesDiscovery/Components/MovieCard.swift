@@ -10,7 +10,7 @@ struct MovieCard: View {
         movie.genres?.first?.name ?? ""
     }
     var body: some View {
-        NavigationLink(destination: TestView()) {
+        NavigationLink(destination: MovieDetailsView(movieId: movie.id)) {
             VStack(alignment: .leading) {
                 Spacer()
                 VStack {
@@ -39,8 +39,7 @@ struct MovieCard: View {
                             Color.background
                             ProgressView()
                         }
-                    case .success(let image):
-                        let _ = print("Successfull image, \(image)")
+                    case .success(let image): 
                         image
                             .resizable()
                             .scaledToFill()

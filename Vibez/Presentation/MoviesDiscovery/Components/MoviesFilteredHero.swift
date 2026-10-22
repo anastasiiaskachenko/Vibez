@@ -11,9 +11,8 @@ struct MoviesFilteredHero: View {
         movie.genres?.map(\.name).joined(separator: ", ") ?? ""
     }
 
-
     var body: some View {
-        NavigationLink(destination: TestView()) {
+        NavigationLink(destination: MovieDetailsView(movieId: movie.id)) {
             VStack(alignment: .leading) {
                 Spacer()
                 VStack {
