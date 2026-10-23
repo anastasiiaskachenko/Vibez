@@ -18,6 +18,7 @@ extension MovieDTO {
             posterPath: poster,
             mediaType: self.mediaType,
             genreIds: genreIds ?? [],
+            genres: [],
             popularity: self.popularity,
             releaseDate: releaseDate.flatMap { dateFormatter.date(from: $0) },
             voteAverage: self.voteAverage,
