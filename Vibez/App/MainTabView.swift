@@ -18,6 +18,8 @@ struct  MainTabView: View {
                 Label("Discover", systemImage: "magnifyingglass")
             }
             .tag(Tab.discover)
+
         }
+
     }
 }

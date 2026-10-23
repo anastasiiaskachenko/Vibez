@@ -10,7 +10,7 @@ struct MovieCard: View {
         movie.genres?.first?.name ?? ""
     }
     var body: some View {
-        NavigationLink(destination: TestView()) {
+        NavigationLink(destination: MovieDetailsView(movieId: movie.id)) {
             VStack(alignment: .leading) {
                 Spacer()
                 VStack {
@@ -28,33 +28,21 @@ struct MovieCard: View {
                 }
                 .background(Color.background.opacity(0.3))
                 .frame(maxWidth: .infinity)
+                .padding(8)
             }
             .frame(maxWidth: .infinity)
             .aspectRatio(9/16, contentMode: .fit)
             .background(
-                AsyncImage(url: movie.posterPath) { phase in
-                    switch phase {
-                    case .empty:
-                        ZStack {
-                            Color.background
-                            ProgressView()
-                        }
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    case .failure(_):
-                        Image("notFound")
-                            .resizable()
-                            .scaledToFill()
-                    @unknown default:
-                        Image("notFound")
-                            .resizable()
-                            .scaledToFill()
-                    }
-                }
+                MoviePosterWithFallback(posterPath: movie.posterPath, fades: false)
             )
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
     }
 }
+
+
+#Preview {
+    MovieCard(movie: mockMovie)
+}
+
+

@@ -5,6 +5,10 @@ protocol MovieRepositoryProtocol {
     func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> (movies: [Movie], isLastPage: Bool)
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie]
     func getMovieById(movieId: Int) async throws -> Movie
+
+    func toggleMovieIsSaved(id: Int) throws
+    func toggleMovieIsWatched(id: Int) throws
+    func toggleMovieIsLiked(id: Int) throws
 }
 
 struct MovieRepository: MovieRepositoryProtocol {
@@ -41,7 +45,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> (movies: [Movie], isLastPage: Bool) {
         let genres = try await getGenres()
         let response = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
-        var isLastPage = response.page >= response.totalPages
+        let isLastPage = response.page >= response.totalPages
         var movies = response.results.map { $0.toDomain() }
         movies = movies.map { movie in
             var updatedMovie = movie
@@ -68,15 +72,15 @@ struct MovieRepository: MovieRepositoryProtocol {
 
     // MARK: Pass-through user interactions
 
-    func toggleUserMovieIsLiked(id: Int) throws {
+    func toggleMovieIsLiked(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isLiked)
     }
 
-    func toggleUserMovieIsSaved(id: Int) throws {
+    func toggleMovieIsSaved(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isSaved)
     }
 
-    func toggleUserMovieIsWatched(id: Int) throws {
+    func toggleMovieIsWatched(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isWatched)
     }
 
