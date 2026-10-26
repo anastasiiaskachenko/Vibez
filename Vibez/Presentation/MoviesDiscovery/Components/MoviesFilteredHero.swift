@@ -1,5 +1,4 @@
 import SwiftUI
-import Playgrounds
 
 struct MoviesFilteredHero: View {
     let movie: Movie
@@ -8,7 +7,7 @@ struct MoviesFilteredHero: View {
     }
 
     var genres: String {
-        movie.genres?.map(\.name).joined(separator: ", ") ?? ""
+        movie.genres.map(\.name).joined(separator: ", ") 
     }
 
 

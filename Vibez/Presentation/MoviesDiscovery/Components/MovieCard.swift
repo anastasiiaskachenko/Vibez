@@ -1,5 +1,4 @@
 import SwiftUI
-import Playgrounds
 
 struct MovieCard: View {
     let movie: Movie
@@ -7,7 +6,7 @@ struct MovieCard: View {
         movie.releaseDate?.formatted(.dateTime.year()) ?? ""
     }
     var genre: String {
-        movie.genres?.first?.name ?? ""
+        movie.genres.first?.name ?? ""
     }
     var body: some View {
         NavigationLink(destination: TestView()) {

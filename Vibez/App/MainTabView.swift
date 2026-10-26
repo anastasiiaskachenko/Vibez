@@ -5,7 +5,6 @@ struct  MainTabView: View {
     
     enum Tab {
         case discover
-        case filteredMovie
         case watchlist
     }
     
