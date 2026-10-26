@@ -8,7 +8,6 @@ extension GenresView {
         var errorMessage: String?
         var isLoading: Bool = false
         init(repository: MovieRepositoryProtocol) {
-
             self.repository = repository
         }
 

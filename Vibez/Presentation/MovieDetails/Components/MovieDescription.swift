@@ -46,10 +46,10 @@ struct MovieDescription: View {
                     }
                 }
 
-                if let genres = movie.genres, !genres.isEmpty  {
+                if !movie.genres.isEmpty  {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            ForEach(genres) {genre in
+                            ForEach(movie.genres) {genre in
                                 NavigationLink { MoviesFilteredView(movieFilters: MovieFilters(withGenres: [genre.id]))
                                 } label: {
                                     Text(genre.name)

@@ -2,7 +2,7 @@ import Foundation
 
 protocol MovieRepositoryProtocol {
     func getGenres() async throws -> [Genre]
-    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> (movies: [Movie], isLastPage: Bool)
+    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> MoviesPage
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie]
     func getMovieById(movieId: Int) async throws -> Movie
 
@@ -42,7 +42,7 @@ struct MovieRepository: MovieRepositoryProtocol {
         }
     }
 
-    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> (movies: [Movie], isLastPage: Bool) {
+    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> MoviesPage {
         let genres = try await getGenres()
         let response = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
         let isLastPage = response.page >= response.totalPages
@@ -54,7 +54,7 @@ struct MovieRepository: MovieRepositoryProtocol {
             }
             return updatedMovie
         }
-        return (movies: movies, isLastPage: isLastPage)
+        return MoviesPage(movies: movies, isLastPage: isLastPage)
     }
 
     // MARK: Put together local stored data and tmdb details

@@ -1,9 +1,9 @@
 import Foundation
 
 struct Dependencies {
-    static var shared = Dependencies()
+    static let shared = Dependencies()
 
-    var repository: MovieRepositoryProtocol
+    let repository: MovieRepositoryProtocol
 
     private init() {
         let container = makeContainer(inMemory: false)
@@ -12,5 +12,6 @@ struct Dependencies {
             tmdbClient: NetworkClient(),
             userMovieStore: container.userMovieStore,
             reflectionStore: container.reflectionStore
-        )    }
+        )
+    }
 }

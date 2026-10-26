@@ -12,7 +12,8 @@ struct MoviesFilteredView: View {
             if viewModel.isLoading && viewModel.movies.isEmpty {
                 ProgressView()
                     .frame(maxHeight: .infinity)
-            } else if let errorMessage = viewModel.errorMessage {
+            } else if let errorMessage = viewModel.errorMessage,
+                      viewModel.movies.isEmpty {
                 ContentUnavailableView(
                     "Failed to load movies",
                     systemImage: "wifi.exclamationmark",
@@ -25,16 +26,35 @@ struct MoviesFilteredView: View {
                         }
 
                         MovieFeed(movies: Array(viewModel.movies.dropFirst()), loadMore: viewModel.loadMovies)
+                        if viewModel.isLoading {
+                            ProgressView()
+                        } else if viewModel.isLastPage {
+                            Text("You reached the end of the list.")
+                        } else if viewModel.errorMessage != nil {
+                            Button {
+                                Task {
+                                    await viewModel.loadMovies()
+                                }
+                            } label: {
+                                Text("Failed to load movies. Press here to retry.")
+                                .padding(12)
+                                .background(Color.accent)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
                     }
+                    .padding(.bottom, 20)
                 }
-                .ignoresSafeArea()
+                .ignoresSafeArea(edges: .top)
             }
 
         }
         .background(Color.background)
         .foregroundStyle(Color.text)
         .task {
-            await viewModel.loadMovies()
+            if viewModel.movies.isEmpty {
+                await viewModel.loadMovies()
+            }
         }
     }
 }

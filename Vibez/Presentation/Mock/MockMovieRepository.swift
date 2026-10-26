@@ -5,8 +5,8 @@ struct MockMovieRepository: MovieRepositoryProtocol {
         return [Genre(id: 28, name: "Action")]
     }
     
-    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> (movies: [Movie], isLastPage: Bool) {
-        return (movies: [mockMovie], isLastPage: true)
+    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> MoviesPage {
+        return MoviesPage(movies: [mockMovie], isLastPage: true)
     }
     
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie] {
