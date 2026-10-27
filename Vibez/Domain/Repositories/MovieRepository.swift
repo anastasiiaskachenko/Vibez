@@ -2,7 +2,7 @@ import Foundation
 
 protocol MovieRepositoryProtocol {
     func getGenres() async throws -> [Genre]
-    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> [Movie]
+    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> MoviesPage
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie]
     func getMovieById(movieId: Int) async throws -> Movie
 }
@@ -11,6 +11,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     private let tmdbClient: NetworkClient
     private let userMovieStore: UserMovieStorage
     private let reflectionStore: ReflectionStorage
+    private let maxPage = 500
 
     init(tmdbClient: NetworkClient, userMovieStore: UserMovieStorage, reflectionStore: ReflectionStorage) {
         self.tmdbClient = tmdbClient
@@ -26,13 +27,31 @@ struct MovieRepository: MovieRepositoryProtocol {
     }
 
     func getMoviesSearch(query: String, page: Int = 1) async throws -> [Movie] {
+        let genres = try await getGenres()
         let moviesDTO = try await tmdbClient.send(GetMoviesSearchRequest(query: query, page: page))
-        return moviesDTO.results.map { $0.toDomain() }
+        let movies = moviesDTO.results.map { $0.toDomain() }
+        return movies.map { movie in
+            var updatedMovie = movie
+            updatedMovie.genres = movie.genreIds.compactMap { id in
+                genres.first(where: { $0.id == id})
+            }
+            return updatedMovie
+        }
     }
 
-    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> [Movie] {
-        let moviesDTO = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
-        return moviesDTO.results.map { $0.toDomain() }
+    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> MoviesPage {
+        let genres = try await getGenres()
+        let response = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
+        let isLastPage = response.page >= response.totalPages || page >= maxPage
+        var movies = response.results.map { $0.toDomain() }
+        movies = movies.map { movie in
+            var updatedMovie = movie
+            updatedMovie.genres = movie.genreIds.compactMap { id in
+                genres.first(where: { $0.id == id})
+            }
+            return updatedMovie
+        }
+        return MoviesPage(movies: movies, isLastPage: isLastPage)
     }
 
     // MARK: Put together local stored data and tmdb details
