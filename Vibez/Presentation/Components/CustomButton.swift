@@ -7,6 +7,7 @@ struct CustomButtonStyle: ButtonStyle {
     }
 
     var variant: Variant = .primary
+    var fillAccent: Bool = true
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -31,22 +32,33 @@ struct CustomButtonStyle: ButtonStyle {
     private var backgroundView: some View {
         switch variant {
         case .primary:
-            Color.accent.opacity(0.9)
+            if fillAccent {
+                Color.accent.opacity(0.9)
+            } else {
+                glassyBg
+            }
         case .secondary:
-            Circle()
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    Circle()
-                        .strokeBorder(Color.white.opacity(0.15), lineWidth: 1)
-                )
-
+            glassyBg
         }
+    }
+
+    private var glassyBg: some View {
+        Capsule()
+            .fill(.ultraThinMaterial)
+            .overlay(
+                Capsule()
+                    .strokeBorder(Color.white.opacity(0.15), lineWidth: 1)
+            )
     }
 }
 
 extension ButtonStyle where Self == CustomButtonStyle {
     static var primaryAction: CustomButtonStyle {
-        CustomButtonStyle(variant: .primary)
+        CustomButtonStyle(variant: .primary, fillAccent: true)
+    }
+
+    static func primaryAction(fillAccent: Bool) -> CustomButtonStyle {
+        CustomButtonStyle(variant: .primary, fillAccent: fillAccent)
     }
 
     static var secondaryAction: CustomButtonStyle {

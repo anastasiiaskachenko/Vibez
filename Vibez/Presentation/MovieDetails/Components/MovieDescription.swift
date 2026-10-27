@@ -79,6 +79,7 @@ struct MovieDescription: View {
                             Text("Reflections")
                         }
                     }
+                    .buttonStyle(.primaryAction)
 
                     Spacer()
 
@@ -92,7 +93,8 @@ struct MovieDescription: View {
                             }
                         }
                     }
-                    .buttonStyle(.primaryAction)
+                    .buttonStyle(.primaryAction(fillAccent: false))
+
                     Button {
                         toggleProp(.isSaved)
                     } label: {
