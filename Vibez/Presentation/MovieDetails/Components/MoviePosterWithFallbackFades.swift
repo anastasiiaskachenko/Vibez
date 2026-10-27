@@ -52,7 +52,6 @@ extension View {
     }
 }
 
-
 #Preview {
     MoviePosterWithFallback(posterPath: URL(string: "https://image.tmdb.org/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg"))
 }

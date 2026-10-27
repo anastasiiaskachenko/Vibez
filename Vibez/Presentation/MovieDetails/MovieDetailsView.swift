@@ -1,6 +1,5 @@
 import SwiftUI
 import Kingfisher
-import Playgrounds
 
 struct MovieDetailsView: View {
     @State private var viewModel: ViewModel
@@ -13,10 +12,18 @@ struct MovieDetailsView: View {
                 VStack {
                     Spacer()
 
-                    MovieDescription(movie: movie, toggleIsSaved: viewModel.toggleIsSaved, toggleIsWatched: viewModel.toggleIsWatched)
+                    MovieDescription(
+                        movie: movie,
+                        toggleProp: { prop in
+                            Task {
+                                await viewModel.toggleProp(prop)
+                            }
+                        }
+                    )
 
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)                .background(
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(
                     MoviePosterWithFallback(posterPath: movie.posterPath)
                         .ignoresSafeArea(edges: .top)
                 )
@@ -26,26 +33,28 @@ struct MovieDetailsView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            viewModel.toggleIsLiked()
+                            Task {
+                                await viewModel.toggleProp(.isLiked)
+                            }
                         } label: {
                             Image(systemName: movie.isLiked ? "heart.fill" : "heart" )
                                 .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(movie.isLiked ? .accent : .black)
+                                .foregroundStyle(.text)
                         }
                     }
                 }
-            }
-            else if let errorMessage = viewModel.errorMessage {
+            } else if let errorMessage = viewModel.errorMessage {
                 ContentUnavailableView(
                     "Failed to load movie",
                     systemImage: "wifi.exclamationmark",
                     description: Text(errorMessage)
                 )
-            } else  {
+            } else {
                 ProgressView()
                     .frame(maxHeight: .infinity)
             }
         }
+        .whiteBackButton()
         .task {
             await viewModel.fetchMovie()
         }
@@ -53,5 +62,5 @@ struct MovieDetailsView: View {
 }
 
 #Preview {
-    MovieDetailsView(repository: MockMovieRepository(), movieId: mockMovie.id)
+    MovieDetailsView(repository: MockMovieRepository(), movieId: Movie.mock.id)
 }

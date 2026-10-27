@@ -39,9 +39,6 @@ struct MovieCard: View {
     }
 }
 
-
 #Preview {
-    MovieCard(movie: mockMovie)
+    MovieCard(movie: Movie.mock)
 }
-
-

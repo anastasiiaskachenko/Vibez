@@ -50,6 +50,11 @@
 			path = VibezTests;
 			sourceTree = "<group>";
 		};
+		89D05B5E308F8131006D5CA4 /* Preview Content */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +75,7 @@
 		000000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
+				89D05B5E308F8131006D5CA4 /* Preview Content */,
 				000000000000000000000010 /* Vibez */,
 				89A051DF3077E23200B1AFC5 /* VibezTests */,
 				89D057743089FB72006D5CA4 /* Frameworks */,
@@ -109,6 +115,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				000000000000000000000010 /* Vibez */,
+				89D05B5E308F8131006D5CA4 /* Preview Content */,
 			);
 			name = Vibez;
 			packageProductDependencies = (
@@ -382,6 +389,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -432,6 +440,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "Preview\\ Content";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;

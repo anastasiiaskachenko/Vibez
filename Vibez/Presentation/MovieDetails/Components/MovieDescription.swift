@@ -1,32 +1,27 @@
 import SwiftUI
-import Playgrounds
 
 struct MovieDescription: View {
     let movie: Movie
-    let toggleIsSaved: () -> Void
-    let toggleIsWatched: () -> Void
+    let toggleProp: (ToggleProps) -> Void
 
-    var  year: String {
+    var year: String {
         movie.releaseDate?.formatted(.dateTime.year()) ?? ""
     }
 
     var metaInfo: String {
-        [year, movie.originalLanguage.uppercased()].filter{ !$0.isEmpty }.joined(separator: " • ")
+        [year, movie.originalLanguage.uppercased()].filter { !$0.isEmpty }.joined(separator: " • ")
     }
 
     var rating: String {
         guard let voteAverage = movie.voteAverage, let voteCount = movie.voteCount else {
             return ""
         }
-        let formattedAverage = String(format: "%.1f", voteAverage)
-        return "\(formattedAverage)(\(voteCount))"
+        let formattedAverage = voteAverage.formatted(.number.precision(.fractionLength(1)))
+        let formattedVoteCount = voteCount.formatted()
+        return "\(formattedAverage) (\(formattedVoteCount))"
+
     }
 
-    init(movie: Movie, toggleIsSaved: @escaping () -> Void, toggleIsWatched: @escaping () -> Void) {
-        self.movie = movie
-        self.toggleIsSaved = toggleIsSaved
-        self.toggleIsWatched = toggleIsWatched
-    }
     var body: some View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
@@ -46,7 +41,7 @@ struct MovieDescription: View {
                     }
                 }
 
-                if !movie.genres.isEmpty  {
+                if !movie.genres.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(movie.genres) {genre in
@@ -75,7 +70,7 @@ struct MovieDescription: View {
                     Text(rating)
                 }
                 HStack {
-                    NavigationLink{
+                    NavigationLink {
                         TestView()
                     } label: {
                         HStack(spacing: 8) {
@@ -86,16 +81,25 @@ struct MovieDescription: View {
                     }
 
                     Spacer()
-                    Group {
-                        if movie.isSaved, !movie.isWatched {
-                            Button("Mark as watched", systemImage: "eye", action: toggleIsWatched)
-                        } else if movie.isSaved, movie.isWatched {
-                                Button("Watched", systemImage: "checkmark", action: toggleIsWatched)
-                        } else {
-                            Button("Add to Watchlist", systemImage: "bookmark", action: toggleIsSaved)
+
+                    Button {
+                        toggleProp(.isWatched)
+                    } label: {
+                        HStack {
+                            Text("Watched")
+                            if movie.isWatched {
+                                Image(systemName: "checkmark")
+                            }
                         }
                     }
                     .buttonStyle(.primaryAction)
+                    Button {
+                        toggleProp(.isSaved)
+                    } label: {
+                        Image(systemName: movie.isSaved ? "bookmark.fill" : "bookmark" )
+                    }
+                    .buttonStyle(.secondaryAction)
+
                 }
             }
             .padding(20)

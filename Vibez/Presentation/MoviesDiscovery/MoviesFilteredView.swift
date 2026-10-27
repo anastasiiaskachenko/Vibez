@@ -49,6 +49,7 @@ struct MoviesFilteredView: View {
             }
 
         }
+        .whiteBackButton()
         .background(Color.background)
         .foregroundStyle(Color.text)
         .task {

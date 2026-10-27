@@ -1,16 +1,41 @@
 import Foundation
 
 extension MovieDetailsView {
+    enum ToggleProps {
+        case isLiked
+        case isSaved
+        case isWatched
+
+        var keyPath: WritableKeyPath<Movie, Bool> {
+            switch self {
+            case .isLiked: return \.isLiked
+            case .isSaved: return \.isSaved
+            case .isWatched: return \.isWatched
+            }
+        }
+
+        func performToggle(
+            on repository: MovieRepositoryProtocol,
+            movieId: Int
+        ) throws {
+            switch self {
+            case .isLiked:
+                try repository.toggleMovieIsLiked(id: movieId)
+            case .isSaved:
+                try repository.toggleMovieIsSaved(id: movieId)
+            case .isWatched:
+                try repository.toggleMovieIsWatched(id: movieId)
+            }
+        }
+    }
+    
     @Observable
     class ViewModel {
         let repository: MovieRepositoryProtocol
-        var movieId: Int
+        let movieId: Int
         var movie: Movie?
-        var page: Int = 0
         var isLoading: Bool = false
         var errorMessage: String?
-        var isLastPage: Bool = false
-        var movieFilters: MovieFilters?
 
         init(repository: MovieRepositoryProtocol, movieId: Int) {
             self.repository = repository
@@ -28,36 +53,20 @@ extension MovieDetailsView {
             }
         }
 
-        func toggleIsSaved() {
+        func toggleProp(_ prop: ToggleProps) async {
             guard var currentMovie = movie else { return }
-            currentMovie.isSaved.toggle()
+            currentMovie[keyPath: prop.keyPath].toggle()
             self.movie = currentMovie
             do {
-                try repository.toggleMovieIsSaved(id: currentMovie.id)
+                try prop.performToggle(on: repository, movieId: currentMovie.id)
             } catch {
-                errorMessage = "Failed to toggle isSaved on movie \(currentMovie.id): \(error.localizedDescription)"
-            }
-        }
-
-        func toggleIsWatched() {
-            guard var currentMovie = movie else { return }
-            currentMovie.isWatched.toggle()
-            self.movie = currentMovie
-            do {
-                try repository.toggleMovieIsWatched(id: currentMovie.id)
-            } catch {
-                errorMessage = "Failed to toggle isWatched on movie \(currentMovie.id): \(error.localizedDescription)"
-            }
-        }
-
-        func toggleIsLiked() {
-            guard var currentMovie = movie else { return }
-            currentMovie.isLiked.toggle()
-            self.movie = currentMovie
-            do {
-                try repository.toggleMovieIsLiked(id: currentMovie.id)
-            } catch {
-                self.errorMessage = "Failed to toggle isLiked on movie \(currentMovie.id): \(error.localizedDescription)"
+                currentMovie[keyPath: prop.keyPath].toggle()
+                self.movie = currentMovie
+                errorMessage =
+                """
+                    Failed to toggle \(prop) on movie
+                    \(currentMovie.id): \(error.localizedDescription)
+                """
             }
         }
     }

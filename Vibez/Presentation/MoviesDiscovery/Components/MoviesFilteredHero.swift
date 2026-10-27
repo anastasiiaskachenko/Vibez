@@ -7,7 +7,7 @@ struct MoviesFilteredHero: View {
     }
 
     var genres: String {
-        movie.genres.map(\.name).joined(separator: ", ") 
+        movie.genres.map(\.name).joined(separator: ", ")
     }
 
     var body: some View {
@@ -26,6 +26,7 @@ struct MoviesFilteredHero: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(1)
                         .truncationMode(.middle)
+                        .padding(.horizontal, 6)
                     Text("\(year) • \(genres)")
                         .font(.headline)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -41,6 +42,6 @@ struct MoviesFilteredHero: View {
 }
 
 #Preview {
-    MoviesFilteredHero(movie: mockMovie)
+    MoviesFilteredHero(movie: Movie.mock)
     .foregroundStyle(Color.text)
 }

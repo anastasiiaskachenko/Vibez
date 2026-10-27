@@ -12,24 +12,24 @@ struct NetworkClientTests {
         let mockSession = URLSession(configuration: configuration)
         return NetworkClient(session: mockSession)
     }
-    
+
     @Test func testGenresFetch() async throws {
         let client = makeMockClient()
-        
-        let mockJson = """
+
+        let mockJson = Data("""
         {
             "genres": [
                 { "id": 28, "name": "Action" },
                 { "id": 12, "name": "Adventure" }
             ]
         }
-        """.data(using: .utf8)!
-        
+        """.utf8)
+
         MockUrlProtocol.requestHandler["/genre/movie/list"] = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
             return (response, mockJson)
         }
-        
+
         let genresResponse = try await client.send(GetGenresRequest())
 
         #expect(genresResponse.genres.count == 2)
@@ -38,23 +38,31 @@ struct NetworkClientTests {
 
     @Test func testMoviesSearchFetch() async throws {
         let client = makeMockClient()
-        
-        let mockJson = """
+
+        let mockJson = Data("""
         {
             "page": 1,
             "results": [
-                { "id": 550, "title": "Fight Club", "overview": "An insider look...", "popularity": 45.2, "adult": false, "original_language": "en", "original_title": "Fight Club" }
+                {
+                    "id": 550,
+                    "title": "Fight Club",
+                    "overview": "An insider look...",
+                    "popularity": 45.2,
+                    "adult": false,
+                    "original_language": "en",
+                    "original_title": "Fight Club"
+        }
             ],
             "total_pages": 1,
             "total_results": 1
         }
-        """.data(using: .utf8)!
-        
+        """.utf8)
+
         MockUrlProtocol.requestHandler["/search/movie"] = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
             return (response, mockJson)
         }
-        
+
         let moviesSearchResponse = try await client.send(GetMoviesSearchRequest(query: "Fight"))
 
         #expect(moviesSearchResponse.results.contains(where: { $0.title == "Fight Club" }))
@@ -62,8 +70,8 @@ struct NetworkClientTests {
 
     @Test func testMoviesFilterFetch() async throws {
         let client = makeMockClient()
-        
-        let mockJson = """
+
+        let mockJson = Data("""
         {
             "page": 1,
             "results": [
@@ -80,13 +88,13 @@ struct NetworkClientTests {
             "total_pages": 1,
             "total_results": 1
         }
-        """.data(using: .utf8)!
-        
+        """.utf8)
+
         MockUrlProtocol.requestHandler["/discover/movie"] = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
             return (response, mockJson)
         }
-        
+
         let moviesSearchResponse = try await client.send(
             GetMoviesFilterRequest(filters: MovieFilters(language: "sv-SE", withOriginCountry: "Sweden"))
         )
@@ -96,8 +104,8 @@ struct NetworkClientTests {
 
     @Test func testMovieByIdFetch() async throws {
         let client = makeMockClient()
-        
-        let mockJson = """
+
+        let mockJson = Data("""
         {
             "id": 490,
             "title": "Det sjunde inseglet",
@@ -107,27 +115,27 @@ struct NetworkClientTests {
             "overview": "A knight plays chess with Death...",
             "popularity": 22.1
         }
-        """.data(using: .utf8)!
-        
+        """.utf8)
+
         MockUrlProtocol.requestHandler["/movie/490"] = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
             return (response, mockJson)
         }
-        
+
         let movieByIdResponse = try await client.send(GetMovieByIdRequest(movieId: 490))
 
         #expect(movieByIdResponse.title == "Det sjunde inseglet")
     }
-    
+
     @Test func testServerError() async throws {
         let client = makeMockClient()
         MockUrlProtocol.requestHandler.removeValue(forKey: "/genre/movie/list")
-        
+
         MockUrlProtocol.requestHandler["/genre/movie/list"] = { request in
             let response = HTTPURLResponse(url: request.url!, statusCode: 401, httpVersion: nil, headerFields: nil)!
             return (response, Data())
         }
-        
+
         await #expect(performing: {
             try await client.send(GetGenresRequest())
         }, throws: { error in

@@ -1,6 +1,6 @@
 import Foundation
 
-final class MockUrlProtocol: URLProtocol {
+class MockUrlProtocol: URLProtocol {
     nonisolated(unsafe) static var requestHandler: [String: ((URLRequest) throws -> (HTTPURLResponse, Data))] = [:]
 
     override class func canInit(with request: URLRequest) -> Bool {
