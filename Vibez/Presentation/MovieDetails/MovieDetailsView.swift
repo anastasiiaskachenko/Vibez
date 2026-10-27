@@ -54,7 +54,6 @@ struct MovieDetailsView: View {
                     .frame(maxHeight: .infinity)
             }
         }
-        .whiteBackButton()
         .task {
             await viewModel.fetchMovie()
         }

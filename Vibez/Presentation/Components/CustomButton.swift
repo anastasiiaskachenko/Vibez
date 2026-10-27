@@ -23,7 +23,7 @@ struct CustomButtonStyle: ButtonStyle {
             )
             .scaleEffect(configuration.isPressed ? 1.2 : 1)
             .animation(
-                .spring(response: 0.2, dampingFraction: 0.45),
+                .spring(response: 0.3, dampingFraction: 0.45),
                 value: configuration.isPressed)
     }
 
