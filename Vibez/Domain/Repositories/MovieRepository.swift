@@ -11,6 +11,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     private let tmdbClient: NetworkClient
     private let userMovieStore: UserMovieStorage
     private let reflectionStore: ReflectionStorage
+    private let maxPage = 500
 
     init(tmdbClient: NetworkClient, userMovieStore: UserMovieStorage, reflectionStore: ReflectionStorage) {
         self.tmdbClient = tmdbClient
@@ -41,7 +42,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> MoviesPage {
         let genres = try await getGenres()
         let response = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
-        let isLastPage = response.page >= response.totalPages || page >= PAGELIMIT
+        let isLastPage = response.page >= response.totalPages || page >= maxPage
         var movies = response.results.map { $0.toDomain() }
         movies = movies.map { movie in
             var updatedMovie = movie

@@ -1,7 +1,5 @@
 import Foundation
 
-let PAGELIMIT = 500
-
 protocol APIRequest {
     associatedtype Response: Decodable
     var endpoint: Endpoint { get }
