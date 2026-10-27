@@ -32,5 +32,4 @@ enum AppEnvironment {
         }
         return backdropPath
     }
-
 }

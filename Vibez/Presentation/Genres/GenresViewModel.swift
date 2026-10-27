@@ -11,7 +11,6 @@ extension GenresView {
             self.repository = repository
         }
 
-        @MainActor
         func loadGenres() async {
             isLoading = true
             defer { isLoading = false}

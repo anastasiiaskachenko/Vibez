@@ -47,7 +47,7 @@ struct MovieRepositoryTests {
                 MovieFilters(language: "sv-SE", withOriginCountry: "SE"))
         let moviesSearchResponse2 = try await repository.getMoviesFilter( filters:
                 MovieFilters(language: "sv-SE", withOriginCountry: "SE"), page: 2)
-        #expect(moviesSearchResponse1 != moviesSearchResponse2)
+        #expect(moviesSearchResponse1.movies != moviesSearchResponse2.movies)
     }
 
     @Test func testMovieByIdFetch() async throws {
@@ -111,22 +111,21 @@ struct MovieRepositoryTests {
 
     @Test func testToggleIsLiked() throws {
 
-
-        try  repository.toggleUserMovieIsLiked(id: testMovieId)
+        try  repository.toggleMovieIsLiked(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isLiked == true)
     }
 
     @Test func testToggleIsSaved() throws {
-        try  repository.toggleUserMovieIsSaved(id: testMovieId)
+        try  repository.toggleMovieIsSaved(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isSaved == true)
     }
 
     @Test func testToggleIsWatched() throws {
-        try  repository.toggleUserMovieIsWatched(id: testMovieId)
+        try  repository.toggleMovieIsWatched(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isWatched == true)

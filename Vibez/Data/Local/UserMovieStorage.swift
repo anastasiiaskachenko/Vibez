@@ -31,7 +31,7 @@ final class UserMovieStorage {
 
     func toggleUserMovieParam(movieId: Int, param: UserMovieToggleParam) throws {
         var userMovie: UserMovieModel
-        
+
         if let existing = try fetchUserMovie(byMovieID: movieId) {
             userMovie = existing
         } else {
@@ -39,7 +39,7 @@ final class UserMovieStorage {
             context.insert(newModel)
             userMovie = newModel
         }
-        
+
         switch param {
         case .isLiked:
             userMovie.isLiked.toggle()
