@@ -2,7 +2,7 @@ import Foundation
 import FoundationModels
 
 @Generable
-struct ReflectionQuestionsResult  {
+struct ReflectionQuestionsResult {
     @Guide(description: "A list of 5 reflection questions about movie for user.")
     var questions: [String]
 }
@@ -21,7 +21,7 @@ enum FoundationModelsServiceError: LocalizedError {
     }
 }
 
-struct FoundationModelsService: LLMServiceProtocol {
+struct FoundationModelsService: LLMWorkerServiceProtocol {
 
     var isAvailable: Bool {
         SystemLanguageModel.default.availability == .available

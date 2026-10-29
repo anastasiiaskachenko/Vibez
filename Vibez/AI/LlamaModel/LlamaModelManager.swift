@@ -31,7 +31,7 @@ actor LlamaModelManager {
         return false
     }
 
-    func downloadModel(proggressHandler: @Sendable @escaping (Double) -> Void) async throws -> URL {
+    func downloadModel(progressHandler: (@Sendable (Double) -> Void)? = nil) async throws -> URL {
         if isModelReady {
             print("[Fallback model] File already exists at \(localModelURL.path)")
             return localModelURL
@@ -69,9 +69,9 @@ actor LlamaModelManager {
                 try fileHandle.write(contentsOf: buffer)
                 buffer.removeAll(keepingCapacity: true)
 
-                if expectedLength > 0 {
+                if expectedLength > 0 && progressHandler != nil {
                     let progress = Double(downloadedBytes) / Double(expectedLength)
-                    proggressHandler(progress)
+                    progressHandler?(progress)
                 }
             }
         }

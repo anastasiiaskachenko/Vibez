@@ -15,7 +15,7 @@ enum LlamaModelServiceError: LocalizedError {
     }
 }
 
-struct LlamaModelService: LLMServiceProtocol {
+struct LlamaModelService: LLMWorkerServiceProtocol {
     var isAvailable: Bool {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let path = appSupport.appendingPathComponent("Models/qwen2.5-1.5b-instruct-q4_k_m.gguf").path
