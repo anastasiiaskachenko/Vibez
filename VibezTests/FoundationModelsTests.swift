@@ -20,7 +20,7 @@ struct FoundationModelsTests {
         let questions = try await service.generatePrompts(for: movieOverview)
 
         #expect(!questions.isEmpty)
-        print("Generated \(questions.count) questions:")
+        print("[Foundation model] Generated \(questions.count) questions:")
         for (index, question) in questions.enumerated() {
             print("\(index + 1). \(question)")
         }

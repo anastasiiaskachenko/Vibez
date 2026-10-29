@@ -17,6 +17,12 @@ struct  MainTabView: View {
                 Label("Discover", systemImage: "magnifyingglass")
             }
             .tag(Tab.discover)
+
+            ModelDownloadTestView()
+            .tabItem {
+                Label("test", systemImage: "magnifyingglass")
+            }
+            .tag(Tab.discover)
         }
     }
 }

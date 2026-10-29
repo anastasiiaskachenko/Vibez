@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		89D057763089FB72006D5CA4 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 89D057753089FB72006D5CA4 /* Kingfisher */; };
+		89D05C653092098E006D5CA4 /* SwiftLlama in Frameworks */ = {isa = PBXBuildFile; productRef = 89D05C643092098E006D5CA4 /* SwiftLlama */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				89D05C653092098E006D5CA4 /* SwiftLlama in Frameworks */,
 				89D057763089FB72006D5CA4 /* Kingfisher in Frameworks */,
 			);
 		};
@@ -120,6 +122,7 @@
 			name = Vibez;
 			packageProductDependencies = (
 				89D057753089FB72006D5CA4 /* Kingfisher */,
+				89D05C643092098E006D5CA4 /* SwiftLlama */,
 			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* Vibez.app */;
@@ -176,6 +179,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				899C947F3089F9C800DC7BB4 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				89D05C633092098E006D5CA4 /* XCRemoteSwiftPackageReference "swift-llama-cpp" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
@@ -570,6 +574,14 @@
 				minimumVersion = 8.14.0;
 			};
 		};
+		89D05C633092098E006D5CA4 /* XCRemoteSwiftPackageReference "swift-llama-cpp" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pgorzelany/swift-llama-cpp";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -577,6 +589,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 899C947F3089F9C800DC7BB4 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		89D05C643092098E006D5CA4 /* SwiftLlama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89D05C633092098E006D5CA4 /* XCRemoteSwiftPackageReference "swift-llama-cpp" */;
+			productName = SwiftLlama;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
