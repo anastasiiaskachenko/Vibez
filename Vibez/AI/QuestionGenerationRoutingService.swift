@@ -12,9 +12,9 @@ enum ActiveTier {
 
 protocol QuestionGenerationRoutingProtocol: Sendable {
     var currentTierStatus: ActiveTier { get }
-    var isLlamaApproved: Bool? { get nonmutating set}
+    var isLlamaModelApproved: Bool? { get nonmutating set}
 
-    func downloadModel(proggressHandler: @Sendable @escaping (Double) -> Void) async throws
+    func downloadModel(progressHandler: @Sendable @escaping (Double) -> Void) async throws
     func generatePrompts(for overview: String) async throws -> [String]
 }
 
@@ -39,7 +39,7 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
         self.userDefaults = userDefaults
     }
 
-    var isLlamaApproved: Bool? {
+    var isLlamaModelApproved: Bool? {
         get { userDefaults.isLlamaModelApproved }
         nonmutating set { userDefaults.isLlamaModelApproved = newValue}
     }
@@ -49,7 +49,7 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
             return .foundationModels
         }
 
-        switch isLlamaApproved {
+        switch isLlamaModelApproved {
         case .none:
             return .llamaModelNotPrompted
         case .some(false):
@@ -61,24 +61,28 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
     }
 
     var isAvailable: Bool {
-        tier1Service.isAvailable || (isLlamaApproved == true && tier2Service.isAvailable)
+        tier1Service.isAvailable || (isLlamaModelApproved == true && tier2Service.isAvailable)
     }
 
 
-    func downloadModel(proggressHandler: @escaping @Sendable (Double) -> Void) async throws {
-        try await LlamaModelManager.shared.downloadModel(progressHandler: {_ in })
+    func downloadModel(progressHandler: @escaping @Sendable (Double) -> Void) async throws {
+        try await LlamaModelManager.shared.downloadModel(progressHandler: progressHandler)
     }
 
     func generatePrompts(for overview: String) async throws -> [String] {
+        print("[router] current status: \(self.currentTierStatus)")
         if tier1Service.isAvailable {
+            print("[router] calling tier 1 service \(type(of: tier1Service))")
             return try await tier1Service.generatePrompts(for: overview)
         }
 
-        if isLlamaApproved == true && tier2Service.isAvailable {
+        if isLlamaModelApproved == true && tier2Service.isAvailable {
+            print("[router] calling tier 2 service \(type(of: tier1Service))")
             return try await tier2Service.generatePrompts(for: overview)
         }
 
         if tier3Service.isAvailable {
+            print("[router] calling tier 3 service \(type(of: tier1Service))")
             return try await tier3Service.generatePrompts(for: overview)
         }
 

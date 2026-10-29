@@ -91,9 +91,17 @@ actor LlamaModelManager {
     }
 
     func deleteModel() throws {
+        let tmpURL = localModelURL.appendingPathExtension("tmp")
+
+        if FileManager.default.fileExists(atPath: tmpURL.path) {
+            try? FileManager.default.removeItem(at: tmpURL)
+        }
+
         if FileManager.default.fileExists(atPath: localModelURL.path) {
             try FileManager.default.removeItem(at: localModelURL)
             print("[Fallback model] Removed local model.")
+        } else {
+            print("[Fallback model] no file to delete at \(localModelURL.path)")
         }
     }
 }
