@@ -6,8 +6,7 @@ struct LlamaModelsTests {
         let service = await LlamaModelService()
 
         if await !service.isAvailable {
-            try await LlamaModelManager.shared.downloadModel
-                { progress in
+            try await LlamaModelManager.shared.downloadModel { progress in
                     print("Progress: \(progress)")
                 }
 

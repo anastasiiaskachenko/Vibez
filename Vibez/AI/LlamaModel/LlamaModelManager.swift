@@ -37,8 +37,6 @@ actor LlamaModelManager {
             return localModelURL
         }
 
-        print("[Fallback model] Starting download from: \(remoteURL)")
-
         let session = URLSession(configuration: .default)
         let (asyncBytes, response) = try await session.bytes(from: remoteURL)
 
@@ -86,7 +84,6 @@ actor LlamaModelManager {
 
         try FileManager.default.moveItem(at: tempDestination, to: localModelURL)
 
-        print("[Fallback model] Download complete! Saved to \(localModelURL.path)")
         return localModelURL
     }
 
@@ -99,9 +96,6 @@ actor LlamaModelManager {
 
         if FileManager.default.fileExists(atPath: localModelURL.path) {
             try FileManager.default.removeItem(at: localModelURL)
-            print("[Fallback model] Removed local model.")
-        } else {
-            print("[Fallback model] no file to delete at \(localModelURL.path)")
         }
     }
 }

@@ -15,7 +15,7 @@ struct GeneratingQuestionsRoutingTests {
         }
 
         func generatePrompts(for overview: String) async throws -> [String] {
-            if shouldThrow  { throw URLError(.badServerResponse)}
+            if shouldThrow { throw URLError(.badServerResponse)}
             return output
         }
     }
@@ -66,4 +66,3 @@ struct GeneratingQuestionsRoutingTests {
         #expect(results.first == "Llama question")
     }
 }
-

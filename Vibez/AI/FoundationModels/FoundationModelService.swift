@@ -52,4 +52,3 @@ struct FoundationModelsService: LLMWorkerServiceProtocol {
         }
     }
 }
-

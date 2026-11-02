@@ -65,14 +65,12 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
         || tier3Service.isAvailable
     }
 
-
     func downloadModel(progressHandler: @escaping @Sendable (Double) -> Void) async throws {
         try await LlamaModelManager.shared.downloadModel(progressHandler: progressHandler)
     }
 
     func generatePrompts(for overview: String) async throws -> [String] {
         if tier1Service.isAvailable {
-            print("[router] calling tier 1 service \(type(of: tier1Service))")
             return try await tier1Service.generatePrompts(for: overview)
         }
 

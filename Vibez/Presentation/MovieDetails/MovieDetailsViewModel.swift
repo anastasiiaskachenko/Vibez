@@ -28,7 +28,7 @@ extension MovieDetailsView {
             }
         }
     }
-    
+
     @Observable
     class ViewModel {
         let repository: MovieRepositoryProtocol

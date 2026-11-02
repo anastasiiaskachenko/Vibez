@@ -7,7 +7,7 @@ extension UserDefaults {
 
     var isLlamaModelApproved: Bool? {
         get { object(forKey: Keys.isLlamaModelApproved) as? Bool }
-        set  {
+        set {
             if let newValue {
                 set(newValue, forKey: Keys.isLlamaModelApproved)
             } else {

@@ -1,5 +1,3 @@
-
-
 struct OpenRouterResponseDTO: Decodable {
     let id: String?
     let model: String?
@@ -21,5 +19,3 @@ struct Message: Encodable, Decodable {
     let role: String
     let content: String?
 }
-
-

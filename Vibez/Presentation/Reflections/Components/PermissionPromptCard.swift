@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PermissionPromptCard: View {
-    let runGeneration: () async  -> Void
+    let runGeneration: () async -> Void
     let startDownloadAndGenerate: () async -> Void
 
     var body: some View {
@@ -11,7 +11,7 @@ struct PermissionPromptCard: View {
 
             Text("Download our compact AI model (~980 MB) to generate questions locally (offline as well)")
 
-            HStack(spacing: 12){
+            HStack(spacing: 12) {
                 Button("Use Remote Model") {
                     UserDefaults.standard.set(false, forKey: "isLlamaModelApproved")
                     Task { await runGeneration() }

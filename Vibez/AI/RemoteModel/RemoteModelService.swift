@@ -18,9 +18,8 @@ struct RemoteModelService: LLMWorkerServiceProtocol {
     let client = NetworkClient()
 
     var isAvailable: Bool {
-        return !AppEnvironment.openRouterKey.isEmpty 
+        return !AppEnvironment.openRouterKey.isEmpty
     }
-
 
     func generatePrompts(for overview: String) async throws -> [String] {
         guard isAvailable else {
@@ -52,8 +51,7 @@ struct RemoteModelService: LLMWorkerServiceProtocol {
             }
             return parseLLMResponseBody(responseBody: replyContent)
 
-
-        } catch (let error) {
+        } catch let error {
             throw RemoteModelServiceError.generationFailed(error.localizedDescription)
         }
     }

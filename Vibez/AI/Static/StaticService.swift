@@ -1,8 +1,6 @@
 import Foundation
 import SwiftLlama
 
-
-
 struct StaticService: LLMWorkerServiceProtocol {
     var isAvailable: Bool { true }
 

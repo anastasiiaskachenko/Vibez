@@ -21,7 +21,6 @@ struct QuestionsList: View {
     }
 }
 
-
 #Preview {
     QuestionsList(questions: ["first question", "second question", "third very very very very long question"], openInputBox: {_ in })
 }
