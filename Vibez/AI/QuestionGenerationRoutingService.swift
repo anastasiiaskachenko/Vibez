@@ -57,11 +57,12 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
         case .some(true):
             return tier2Service.isAvailable ? .llamaModelDownloaded : .llamaModelNeedsDownload
         }
-
     }
 
     var isAvailable: Bool {
-        tier1Service.isAvailable || (isLlamaModelApproved == true && tier2Service.isAvailable)
+        tier1Service.isAvailable
+        || (isLlamaModelApproved == true && tier2Service.isAvailable)
+        || tier3Service.isAvailable
     }
 
 
@@ -70,20 +71,21 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
     }
 
     func generatePrompts(for overview: String) async throws -> [String] {
-        print("[router] current status: \(self.currentTierStatus)")
         if tier1Service.isAvailable {
             print("[router] calling tier 1 service \(type(of: tier1Service))")
             return try await tier1Service.generatePrompts(for: overview)
         }
 
         if isLlamaModelApproved == true && tier2Service.isAvailable {
-            print("[router] calling tier 2 service \(type(of: tier1Service))")
             return try await tier2Service.generatePrompts(for: overview)
         }
 
         if tier3Service.isAvailable {
-            print("[router] calling tier 3 service \(type(of: tier1Service))")
-            return try await tier3Service.generatePrompts(for: overview)
+            do {
+                return try await tier3Service.generatePrompts(for: overview)
+            } catch {
+                print("Remote model calling failed, falling back to static prompts")
+            }
         }
 
         return try await tier4Service.generatePrompts(for: overview)

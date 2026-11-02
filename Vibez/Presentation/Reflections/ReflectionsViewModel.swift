@@ -2,6 +2,7 @@ import Foundation
 
 extension ReflectionsView {
     @Observable
+    @MainActor
     class ViewModel {
         let repository: MovieRepositoryProtocol
         let router = QuestionGenerationRoutingService()
@@ -15,25 +16,8 @@ extension ReflectionsView {
             self.repository = repository
             self.movie = movie
         }
-/*
-        func loadGenres() async {
-            isLoading = true
-            defer { isLoading = false}
-            do {
-                self.genres = try await repository.getGenres()
-            } catch {
-                self.errorMessage = error.localizedDescription
-            }
-        }
- */
 
         func runGeneration() async {
-            print("--- [DEBUG INFO] ---")
-                print("Device: iPhone 13")
-                print("Router Status: \(router.currentTierStatus)")
-                print("Llama Ready on Disk?: \(await LlamaModelManager.shared.isModelReady)")
-                print("Local Model Path: \(await LlamaModelManager.shared.localModelURL.path)")
-                print("--------------------")
             guard !isLoading else { return }
             isLoading = true
             errorMessage = nil

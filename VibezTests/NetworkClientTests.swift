@@ -140,7 +140,7 @@ struct NetworkClientTests {
             try await client.send(GetGenresRequest())
         }, throws: { error in
             guard let networkError = error as? NetworkError else { return false }
-            return networkError.errorDescription == "TMDB API returned HTTP status 401."
+            return networkError.errorDescription == "API returned HTTP status 401."
         })
     }
 }

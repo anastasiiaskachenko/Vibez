@@ -12,15 +12,16 @@ struct QuestionsList: View {
                         openInputBox(question)
                     } label: {
                         Text(question)
-                            .padding(8)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.secondary, lineWidth: 4)
-                            )
                     }
+                    .buttonStyle(.primaryAction)
                 }
             }
+            .padding(8)
         }
     }
+}
+
+
+#Preview {
+    QuestionsList(questions: ["first question", "second question", "third very very very very long question"], openInputBox: {_ in })
 }

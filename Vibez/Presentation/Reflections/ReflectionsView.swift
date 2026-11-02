@@ -16,6 +16,7 @@ struct ReflectionsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
+            /*
             #if DEBUG
             Button("Reset model states", role: .destructive) {
                 Task {
@@ -23,21 +24,22 @@ struct ReflectionsView: View {
                 }
             }
             #endif
+             */
             if viewModel.isDownloading {
                 DownloadProgressCard(downloandProgress: viewModel.downloadProgress)
+            } else if viewModel.isLoading && viewModel.questions.isEmpty {
+                LoadingPlaceholderCard()
+            } else if !viewModel.questions.isEmpty {
+                QuestionsList(
+                    questions: viewModel.questions,
+                    openInputBox: {_ in }
+                )
             } else if viewModel.router.currentTierStatus == .llamaModelNotPrompted {
                 PermissionPromptCard(
                     runGeneration: viewModel.runGeneration,
                     startDownloadAndGenerate: viewModel.startDownloadAndGenerate
                 )
-            } else if viewModel.isLoading && viewModel.questions.isEmpty {
-                LoadingPlaceholderCard()
-            } else if !viewModel.questions.isEmpty {
-                QuestionsList(
-                    questions:viewModel.questions,
-                    openInputBox: {_ in }
-                )
-            }  
+            }
 
             if viewModel.errorMessage != nil {
                 Text(viewModel.errorMessage ?? "Unknown error")

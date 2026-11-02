@@ -1,6 +1,10 @@
 import Foundation
 import SwiftLlama
 
+let temperature: CFloat = 0.3
+let seed: UInt32 = 0
+let topP: Float = 0.9
+
 enum LlamaModelServiceError: LocalizedError {
     case modelUnavailable
     case generationFailed(String)
@@ -43,16 +47,12 @@ struct LlamaModelService: LLMWorkerServiceProtocol {
             LlamaChatMessage(role: .user, content: "Movie overview: \(overview)")
         ]
 
-
-        print("[Llama] generating tokens")
-
-
         let stream = try await llamaService.streamCompletion(
                 of: messages,
                 samplingConfig: .init(
-                    temperature: 0.3,
-                    seed: 0,
-                    topP: 0.9
+                    temperature: temperature,
+                    seed: seed,
+                    topP: topP
                 )
             )
 
@@ -62,18 +62,7 @@ struct LlamaModelService: LLMWorkerServiceProtocol {
             fullResponse += token
         }
 
-        print("[Llama] Generated raw output: \(fullResponse)")
-
-        let questions = fullResponse
-            .components(separatedBy: .newlines)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines)}
-            .map { line in
-                line.replacingOccurrences(of: "^[-*•\\d.]+\\s*", with: "", options: .regularExpression)
-            }
-            .filter { line in
-                !line.isEmpty && line.count > 10 && !line.contains("<|im_")
-            }
-
+        let questions = parseLLMResponseBody(responseBody: fullResponse)
         return questions
     }
 }
