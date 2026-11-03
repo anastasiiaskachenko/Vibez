@@ -5,7 +5,7 @@ struct ReflectionInput: View {
     var isThoughtsInput: Bool
     var prompt: String
     var placehoder: String
-    var updatedAt: Date? = nil
+    var updatedAt: Date
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -33,7 +33,9 @@ struct ReflectionInput: View {
                     .padding(.trailing, 4)
                 }
             }
-            Text("Last saved indicator")
+            Text("Last updated \(updatedAt.formatted(.relative(presentation: .named)))")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .padding(16)
         .background(.bgSecondary)

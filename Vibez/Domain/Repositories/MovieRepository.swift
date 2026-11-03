@@ -104,6 +104,7 @@ struct MovieRepository: MovieRepositoryProtocol {
 
     func updateReflection(id: UUID, newReflection: Reflection) throws {
         try reflectionStore.updateReflection(id: id, newReflection: newReflection)
+        print("Reflection updated/created")
     }
 
     func deleteReflection(id: UUID) throws {

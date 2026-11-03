@@ -80,6 +80,9 @@ struct ReflectionsView: View {
                         placehoder: "Start typing your thoughts here...",
                         updatedAt: viewModel.reflections[index].updatedAt
                     )
+                    .onChange(of: viewModel.reflections[index].content) {_, _ in
+                        viewModel.onContentChange(for: viewModel.reflections[index])
+                    }
                 }
 
                 if viewModel.isDownloading {
@@ -106,8 +109,12 @@ struct ReflectionsView: View {
                         content: $viewModel.reflections[charIndex].content,
                         isThoughtsInput: false,
                         prompt: aboutCharacterPrompt,
-                        placehoder: "Whose choices are you still considering?..."
+                        placehoder: "Whose choices are you still considering?...",
+                        updatedAt: viewModel.reflections[charIndex].updatedAt
                     )
+                    .onChange(of: viewModel.reflections[charIndex].content) {_, _ in
+                        viewModel.onContentChange(for: viewModel.reflections[charIndex])
+                    }
                 }
 
                 ForEach($viewModel.reflections) { $reflection in
@@ -117,9 +124,14 @@ struct ReflectionsView: View {
                             content: $reflection.content,
                             isThoughtsInput: false,
                             prompt: reflection.prompt,
-                            placehoder: "Start typing here..."
+                            placehoder: "Start typing here...",
+                            updatedAt: reflection.updatedAt
+
                         )
-                        .id(reflection.prompt)
+                        .id(reflection.id)
+                        .onChange(of: reflection.content) {_, _ in
+                            viewModel.onContentChange(for: reflection)
+                        }
                     }
                 }
             }

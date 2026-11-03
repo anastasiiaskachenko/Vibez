@@ -8,12 +8,16 @@ extension ReflectionsView {
         let repository: MovieRepositoryProtocol
         let router: QuestionGenerationRoutingProtocol
         var questions: [String] = []
-        var reflections: [Reflection]
+        var reflections: [Reflection] = []
         var movie: Movie
         var errorMessage: String?
         var isLoading: Bool = false
         var isDownloading: Bool = false
         var downloadProgress: Double = 0
+
+        @ObservationIgnored
+        private var saveTasks: [UUID: Task<Void, Never>] = [:]
+
         init(
             repository: MovieRepositoryProtocol,
             movie: Movie,
@@ -22,18 +26,40 @@ extension ReflectionsView {
             self.repository = repository
             self.movie = movie
             self.router = router ?? QuestionGenerationRoutingService()
-            self.reflections = [
-                Reflection(movieId: movie.id, prompt: yourThoughtsPrompt, content: "", updatedAt: Date.now),
-                Reflection(movieId: movie.id, prompt: aboutCharacterPrompt, content: "", updatedAt: Date.now)
-            ]
         }
-//TODO: Once we actually save reflection update to self.reflections = response
+
         func fetchReflections() async {
             isLoading = true
             defer { isLoading = false}
             do {
                 let response = try repository.fetchReflections(byMovieID: movie.id)
-                self.reflections += response
+
+                let existingThoughts = response.first(where: {$0.prompt == yourThoughtsPrompt})
+                let existingCharacter = response.first(where: {$0.prompt == aboutCharacterPrompt})
+
+                let yourThoughtsReflection = existingThoughts ?? Reflection(
+                    movieId: movie.id,
+                    prompt: yourThoughtsPrompt,
+                    content: "",
+                    updatedAt: Date.now
+                )
+
+                let aboutCharacterReflection = existingCharacter ?? Reflection(
+                    movieId: movie.id,
+                    prompt: aboutCharacterPrompt,
+                    content: "",
+                    updatedAt: Date.now
+                )
+
+                var merged: [Reflection] = [ yourThoughtsReflection, aboutCharacterReflection ]
+
+                let customStored = response.filter {
+                    $0.prompt != yourThoughtsPrompt && $0.prompt != aboutCharacterPrompt
+                }
+
+                merged.append(contentsOf: customStored)
+
+                self.reflections = merged
             } catch {
                 self.errorMessage = error.localizedDescription
             }
@@ -90,6 +116,31 @@ extension ReflectionsView {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                 reflections.append(newReflection)
                 self.questions.removeAll(where: { $0 == question })
+            }
+        }
+
+        func onContentChange(for reflection: Reflection) {
+            let key = reflection.id
+
+            saveTasks[key]?.cancel()
+
+            saveTasks[key] = Task {
+                do {
+                    try await Task.sleep(nanoseconds: 3_000_000_00)
+                    if reflection.content != "" {
+                        try repository.updateReflection(id: reflection.id, newReflection: reflection)
+                        if let updatedReflection = try repository.fetchReflection(byID: reflection.id),
+                           let currIndex = self.reflections.firstIndex(where: { $0.id == reflection.id}) {
+                            self.reflections[currIndex] = updatedReflection
+                        }
+                    } else {
+                        try repository.deleteReflection(id: reflection.id)
+                    }
+                } catch {
+                    if !(error is CancellationError) {
+                        self.errorMessage = "Failed to save reflection changes. \(error.localizedDescription)"
+                    }
+                }
             }
         }
 

@@ -84,11 +84,25 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
         }
         
         if tier1Service.isAvailable {
-            return try await tier1Service.generatePrompts(for: overview)
+            do {
+                let prompts = try await tier1Service.generatePrompts(for: overview)
+                if !prompts.isEmpty {
+                    return prompts
+                }
+            } catch {
+                print("native model calling failed, falling back to static prompts")
+            }
         }
 
         if isLlamaModelApproved == true && tier2Service.isAvailable {
-            return try await tier2Service.generatePrompts(for: overview)
+            do {
+                let prompts = try await tier2Service.generatePrompts(for: overview)
+                if !prompts.isEmpty {
+                    return prompts
+                }
+            } catch {
+                print("local model calling failed, falling back to static prompts")
+            }
         }
 
         if tier3Service.isAvailable {
