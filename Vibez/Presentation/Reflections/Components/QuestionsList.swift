@@ -11,12 +11,15 @@ struct QuestionsList: View {
                     Button {
                         openInputBox(question)
                     } label: {
-                        Text(question)
+                        HStack{
+                            Image(systemName: "sparkles")
+                            Text(question)
+                        }
                     }
                     .buttonStyle(.primaryAction)
                 }
             }
-            .padding(8)
+            .padding(6)
         }
     }
 }

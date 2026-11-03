@@ -44,7 +44,16 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
         nonmutating set { userDefaults.isLlamaModelApproved = newValue}
     }
 
+    var inPreview: Bool {
+        let env = ProcessInfo.processInfo.environment
+        return env["XCODE_RUNNING_FOR_PREVIEWS"] == "1" || env["ENABLE_PREVIEWS"] == "1"
+    }
+
     var currentTierStatus: ActiveTier {
+        if inPreview {
+            return .remoteOrStaticFallback
+        }
+
         if tier1Service.isAvailable {
             return .foundationModels
         }
@@ -70,6 +79,10 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
     }
 
     func generatePrompts(for overview: String) async throws -> [String] {
+        if (inPreview) {
+            return try await tier4Service.generatePrompts(for: overview)
+        }
+        
         if tier1Service.isAvailable {
             return try await tier1Service.generatePrompts(for: overview)
         }
@@ -80,7 +93,10 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
 
         if tier3Service.isAvailable {
             do {
-                return try await tier3Service.generatePrompts(for: overview)
+                let prompts = try await tier3Service.generatePrompts(for: overview)
+                if !prompts.isEmpty {
+                    return prompts
+                }
             } catch {
                 print("Remote model calling failed, falling back to static prompts")
             }

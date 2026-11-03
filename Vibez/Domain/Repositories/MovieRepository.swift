@@ -9,6 +9,10 @@ protocol MovieRepositoryProtocol {
     func toggleMovieIsSaved(id: Int) throws
     func toggleMovieIsWatched(id: Int) throws
     func toggleMovieIsLiked(id: Int) throws
+    func fetchReflections(byMovieID: Int) throws -> [Reflection]
+    func fetchReflection(byID: UUID) throws -> Reflection?
+    func updateReflection(id: UUID, newReflection: Reflection) throws
+    func deleteReflection(id: UUID) throws
 }
 
 struct MovieRepository: MovieRepositoryProtocol {

@@ -18,7 +18,9 @@ struct  MainTabView: View {
             }
             .tag(Tab.discover)
 
-            ReflectionsView(movie: Movie.mock)
+            NavigationStack {
+                ReflectionsView(movie: Movie.mock)
+            }
             .tabItem {
                 Label("test", systemImage: "magnifyingglass")
             }

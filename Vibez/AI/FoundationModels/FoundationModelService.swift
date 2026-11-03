@@ -24,11 +24,11 @@ enum FoundationModelsServiceError: LocalizedError {
 struct FoundationModelsService: LLMWorkerServiceProtocol {
 
     var isAvailable: Bool {
-        #if targetEnvironment(simulator)
+        /*#if targetEnvironment(simulator)
         return false
-        #else
-        SystemLanguageModel.default.availability == .available
-        #endif
+        #else*/
+        return SystemLanguageModel.default.availability == .available
+        //#endif
     }
 
     func generatePrompts(for overview: String) async throws -> [String] {
