@@ -6,7 +6,7 @@ struct GenresView: View {
     init(repository: MovieRepositoryProtocol = Dependencies.shared.repository) {
         _viewModel = State(initialValue: ViewModel(repository: repository))
     }
-    
+
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 4) {

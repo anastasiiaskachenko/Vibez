@@ -5,6 +5,10 @@ protocol MovieRepositoryProtocol {
     func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> MoviesPage
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie]
     func getMovieById(movieId: Int) async throws -> Movie
+
+    func toggleMovieIsSaved(id: Int) throws
+    func toggleMovieIsWatched(id: Int) throws
+    func toggleMovieIsLiked(id: Int) throws
 }
 
 struct MovieRepository: MovieRepositoryProtocol {
@@ -69,15 +73,15 @@ struct MovieRepository: MovieRepositoryProtocol {
 
     // MARK: Pass-through user interactions
 
-    func toggleUserMovieIsLiked(id: Int) throws {
+    func toggleMovieIsLiked(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isLiked)
     }
 
-    func toggleUserMovieIsSaved(id: Int) throws {
+    func toggleMovieIsSaved(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isSaved)
     }
 
-    func toggleUserMovieIsWatched(id: Int) throws {
+    func toggleMovieIsWatched(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isWatched)
     }
 
