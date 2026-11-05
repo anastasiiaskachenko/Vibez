@@ -17,7 +17,6 @@ struct MovieFeed: View {
                 }
             }
         }
-        .padding(16)
         .frame(maxWidth: .infinity)
     }
 }
