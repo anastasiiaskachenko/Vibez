@@ -2,9 +2,17 @@ import Foundation
 
 protocol MovieRepositoryProtocol {
     func getGenres() async throws -> [Genre]
-    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> [Movie]
+    func getMoviesFilter(filters: MovieFilters, page: Int) async throws -> MoviesPage
     func getMoviesSearch(query: String, page: Int) async throws -> [Movie]
     func getMovieById(movieId: Int) async throws -> Movie
+
+    func toggleMovieIsSaved(id: Int) throws
+    func toggleMovieIsWatched(id: Int) throws
+    func toggleMovieIsLiked(id: Int) throws
+    func fetchReflections(byMovieID: Int) throws -> [Reflection]
+    func fetchReflection(byID: UUID) throws -> Reflection?
+    func updateReflection(id: UUID, newReflection: Reflection) throws
+    func deleteReflection(id: UUID) throws
 }
 
 struct MovieRepository: MovieRepositoryProtocol {
@@ -26,13 +34,31 @@ struct MovieRepository: MovieRepositoryProtocol {
     }
 
     func getMoviesSearch(query: String, page: Int = 1) async throws -> [Movie] {
+        let genres = try await getGenres()
         let moviesDTO = try await tmdbClient.send(GetMoviesSearchRequest(query: query, page: page))
-        return moviesDTO.results.map { $0.toDomain() }
+        let movies = moviesDTO.results.map { $0.toDomain() }
+        return movies.map { movie in
+            var updatedMovie = movie
+            updatedMovie.genres = movie.genreIds.compactMap { id in
+                genres.first(where: { $0.id == id})
+            }
+            return updatedMovie
+        }
     }
 
-    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> [Movie] {
-        let moviesDTO = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
-        return moviesDTO.results.map { $0.toDomain() }
+    func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> MoviesPage {
+        let genres = try await getGenres()
+        let response = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
+        let isLastPage = response.page >= response.totalPages
+        var movies = response.results.map { $0.toDomain() }
+        movies = movies.map { movie in
+            var updatedMovie = movie
+            updatedMovie.genres = movie.genreIds.compactMap { id in
+                genres.first(where: { $0.id == id})
+            }
+            return updatedMovie
+        }
+        return MoviesPage(movies: movies, isLastPage: isLastPage)
     }
 
     // MARK: Put together local stored data and tmdb details
@@ -50,15 +76,15 @@ struct MovieRepository: MovieRepositoryProtocol {
 
     // MARK: Pass-through user interactions
 
-    func toggleUserMovieIsLiked(id: Int) throws {
+    func toggleMovieIsLiked(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isLiked)
     }
 
-    func toggleUserMovieIsSaved(id: Int) throws {
+    func toggleMovieIsSaved(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isSaved)
     }
 
-    func toggleUserMovieIsWatched(id: Int) throws {
+    func toggleMovieIsWatched(id: Int) throws {
         try userMovieStore.toggleUserMovieParam(movieId: id, param: .isWatched)
     }
 

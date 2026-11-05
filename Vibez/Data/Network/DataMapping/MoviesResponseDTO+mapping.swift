@@ -1,11 +1,12 @@
 import Foundation
 
-
 extension MovieDTO {
     func toDomain(isSaved: Bool = false, isLiked: Bool = false, isWatched: Bool = false) -> Movie {
-        let genreIds = genreIds ?? genres?.map(\.id)
+        let genreIds = genreIds ?? ( genres?.map(\.id) ?? [])
         let poster = posterPath.flatMap { URL(string: AppEnvironment.tmdbPosterPath + $0)}
         let backdrop = backdropPath.flatMap { URL(string: AppEnvironment.tmdbBackdropPath + $0)}
+        let releaseDate = self.releaseDate.flatMap { dateFormatter.date(from: $0)}
+        let genres = self.genres?.map { $0.toDomain() } ?? []
 
         return Movie(
             id: self.id,
@@ -17,9 +18,10 @@ extension MovieDTO {
             overview: self.overview,
             posterPath: poster,
             mediaType: self.mediaType,
-            genreIds: genreIds ?? [],
+            genreIds: genreIds,
+            genres: genres,
             popularity: self.popularity,
-            releaseDate: releaseDate.flatMap { dateFormatter.date(from: $0) },
+            releaseDate: releaseDate,
             voteAverage: self.voteAverage,
             voteCount: self.voteCount,
             isSaved: isSaved,

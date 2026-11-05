@@ -32,4 +32,28 @@ enum AppEnvironment {
         }
         return backdropPath
     }
+
+    static var openRouterKey: String {
+        guard let openRouterKey = Bundle.main.object(forInfoDictionaryKey: "OPENROUTER_KEY") as? String,
+                !openRouterKey.isEmpty else {
+            fatalError("OPENROUTER_KEY is not found, set OPENROUTER_KEY variable in Development.xcconfig")
+        }
+        return openRouterKey
+    }
+
+    static var AImodel: String {
+        guard let AImodel = Bundle.main.object(forInfoDictionaryKey: "AI_MODEL") as? String,
+                !AImodel.isEmpty else {
+            fatalError("AI_MODEL is not found, set AI_MODEL variable in Development.xcconfig")
+        }
+        return AImodel
+    }
+
+    static var openrouterPath: String {
+        guard let openrouterPath = Bundle.main.object(forInfoDictionaryKey: "OPENROUTER_PATH") as? String,
+                !openrouterPath.isEmpty else {
+            fatalError("OPENROUTER_PATH is not found, set OPENROUTER_PATH variable in Development.xcconfig")
+        }
+        return openrouterPath
+    }
 }

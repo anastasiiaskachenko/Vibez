@@ -13,7 +13,7 @@ struct GenresList: View {
 }
 
 #Preview {
-    NavigationStack{
+    NavigationStack {
         GenresList(genres: [
             Genre(id: 28, name: "Action"),
             Genre(id: 37, name: "Western")

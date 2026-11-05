@@ -2,18 +2,23 @@ import Foundation
 
 final class NetworkClient {
     private var session: URLSession
-    
+
     init(session: URLSession = .shared) {
         self.session = session
     }
-    
+
     private static let decoder: JSONDecoder = {
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return decoder
-        }()
-    
-    func send<T: APIRequest>(_ request: T) async throws -> T.Response {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+
+    private static let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        return encoder
+    }()
+
+    func send<T: APIRequest >(_ request: T) async throws -> T.Response {
         guard let url = request.url else {
             throw NetworkError.invalidURL
         }
@@ -22,6 +27,17 @@ final class NetworkClient {
         urlRequest.httpMethod = request.endpoint.method.rawValue
 
         urlRequest.setValue("Bearer \(AppEnvironment.tmdbAPIKey)", forHTTPHeaderField: "Authorization")
+
+        if let customHeaders = request.headers {
+            for (key, value) in customHeaders {
+                urlRequest.setValue(value, forHTTPHeaderField: key)
+            }
+        }
+
+        if request.body != nil {
+            let httpBody = try NetworkClient.encoder.encode(request.body)
+            urlRequest.httpBody = httpBody
+        }
 
         let (data, response): (Data, URLResponse)
         do {

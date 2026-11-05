@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 extension Image {
     init (itemId: Int, fallbackImage: String = "notFound") {

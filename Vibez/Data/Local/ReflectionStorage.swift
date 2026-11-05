@@ -37,9 +37,13 @@ final class ReflectionStorage {
     }
 
     func updateReflection(id: UUID, newReflection: Reflection) throws {
-        guard let reflection = try fetchReflection(byID: id) else { return }
+        guard let reflection = try fetchReflection(byID: id) else {
+            try createReflection(reflection: newReflection)
+            return
+        }
         reflection.prompt = newReflection.prompt
         reflection.content = newReflection.content
+        reflection.updatedAt = .now
         if context.hasChanges {
             try context.save()
         }
