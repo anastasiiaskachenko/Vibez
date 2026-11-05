@@ -33,9 +33,11 @@ struct ReflectionInput: View {
                     .padding(.trailing, 4)
                 }
             }
-            Text("Last updated \(updatedAt.formatted(.relative(presentation: .named)))")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            TimelineView(.periodic(from: .now, by: 60.0)) { _ in
+                Text("Last updated \(updatedAt.formatted(.relative(presentation: .named)))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .padding(16)
         .background(.bgSecondary)

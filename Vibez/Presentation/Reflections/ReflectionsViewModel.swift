@@ -122,19 +122,26 @@ extension ReflectionsView {
         func onContentChange(for reflection: Reflection) {
             let key = reflection.id
 
+            if let currIndex = self.reflections.firstIndex(where: { $0.id == key}) {
+                self.reflections[currIndex].updatedAt = .now
+            }
+
             saveTasks[key]?.cancel()
 
             saveTasks[key] = Task {
                 do {
                     try await Task.sleep(nanoseconds: 3_000_000_00)
-                    if reflection.content != "" {
-                        try repository.updateReflection(id: reflection.id, newReflection: reflection)
-                        if let updatedReflection = try repository.fetchReflection(byID: reflection.id),
-                           let currIndex = self.reflections.firstIndex(where: { $0.id == reflection.id}) {
-                            self.reflections[currIndex] = updatedReflection
-                        }
+
+                    guard let latestChanges = self.reflections.first(where: { $0.id == key}) else { return }
+
+                    let hasContent = !latestChanges.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    let isDefaultPrompt = latestChanges.prompt == yourThoughtsPrompt || latestChanges.prompt == aboutCharacterPrompt
+
+                    if hasContent || isDefaultPrompt {
+                        try repository.updateReflection(id: latestChanges.id, newReflection: latestChanges)
                     } else {
-                        try repository.deleteReflection(id: reflection.id)
+                        try repository.deleteReflection(id: latestChanges.id)
+                        self.reflections.removeAll(where: {$0.id == key})
                     }
                 } catch {
                     if !(error is CancellationError) {
@@ -144,6 +151,7 @@ extension ReflectionsView {
             }
         }
 
+        // Used for testing
         func resetModelState() async {
             try? await LlamaModelManager.shared.deleteModel()
 

@@ -20,11 +20,7 @@ struct ReflectionsView: View {
         )
     }
 
-    private var thoughtsIndex: Int? { viewModel.reflections.firstIndex(where: { $0.prompt == yourThoughtsPrompt})
-    }
-
-    private var characterIndex: Int? { viewModel.reflections.firstIndex(where: { $0.prompt == aboutCharacterPrompt })
-    }
+    private var thoughtsIndex: Int? { viewModel.reflections.firstIndex(where: { $0.prompt == yourThoughtsPrompt})}
 
 
     var year: String {
@@ -104,22 +100,9 @@ struct ReflectionsView: View {
                 if viewModel.errorMessage != nil {
                     Text(viewModel.errorMessage ?? "Unknown error")
                 }
-                if let charIndex = characterIndex {
-                    ReflectionInput(
-                        content: $viewModel.reflections[charIndex].content,
-                        isThoughtsInput: false,
-                        prompt: aboutCharacterPrompt,
-                        placehoder: "Whose choices are you still considering?...",
-                        updatedAt: viewModel.reflections[charIndex].updatedAt
-                    )
-                    .onChange(of: viewModel.reflections[charIndex].content) {_, _ in
-                        viewModel.onContentChange(for: viewModel.reflections[charIndex])
-                    }
-                }
 
                 ForEach($viewModel.reflections) { $reflection in
-                    if reflection.prompt != yourThoughtsPrompt &&
-                        reflection.prompt != aboutCharacterPrompt {
+                    if reflection.prompt != yourThoughtsPrompt {
                         ReflectionInput(
                             content: $reflection.content,
                             isThoughtsInput: false,
