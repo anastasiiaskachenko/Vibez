@@ -34,9 +34,13 @@ struct ReflectionInput: View {
                 }
             }
             TimelineView(.periodic(from: .now, by: 60.0)) { _ in
-                Text("Last updated \(updatedAt.formatted(.relative(presentation: .named)))")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack {
+                    Text("•")
+                        .foregroundStyle(.accent)
+                    Text("Saved \(updatedAt.formatted(.relative(presentation: .named)))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .padding(16)
