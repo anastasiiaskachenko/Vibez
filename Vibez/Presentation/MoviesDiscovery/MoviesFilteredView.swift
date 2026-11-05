@@ -26,6 +26,7 @@ struct MoviesFilteredView: View {
                         }
 
                         MovieFeed(movies: Array(viewModel.movies.dropFirst()), loadMore: viewModel.loadMovies)
+                            .padding(16)
                         if viewModel.isLoading {
                             ProgressView()
                         } else if viewModel.isLastPage {
