@@ -8,8 +8,7 @@ struct SearchView: View {
 
     init(
         repository: MovieRepositoryProtocol = Dependencies.shared.repository
-    )
-    {
+    ) {
         _viewModel = State(
             initialValue: ViewModel(
                 repository: repository
@@ -38,7 +37,7 @@ struct SearchView: View {
                 } else {
                     ScrollView {
                         MovieFeed(movies: viewModel.suggestionMovies, loadMore: {})
-                    } 
+                    }
                     .contentMargins(.top, 0, for: .scrollContent)
                     .simultaneousGesture(
                         DragGesture().onChanged { _ in

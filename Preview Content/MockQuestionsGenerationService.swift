@@ -1,5 +1,3 @@
-
-
 struct MockQuestionGenerationRouting: QuestionGenerationRoutingProtocol {
     var isLlamaModelApproved: Bool? {
         get {

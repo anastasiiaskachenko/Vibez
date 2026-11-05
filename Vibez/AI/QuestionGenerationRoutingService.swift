@@ -79,10 +79,10 @@ struct QuestionGenerationRoutingService: QuestionGenerationRoutingProtocol {
     }
 
     func generatePrompts(for overview: String) async throws -> [String] {
-        if (inPreview) {
+        if inPreview {
             return try await tier4Service.generatePrompts(for: overview)
         }
-        
+
         if tier1Service.isAvailable {
             do {
                 let prompts = try await tier1Service.generatePrompts(for: overview)
