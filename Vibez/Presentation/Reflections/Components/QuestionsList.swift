@@ -11,7 +11,7 @@ struct QuestionsList: View {
                     Button {
                         openInputBox(question)
                     } label: {
-                        HStack{
+                        HStack {
                             Image(systemName: "sparkles")
                             Text(question)
                         }

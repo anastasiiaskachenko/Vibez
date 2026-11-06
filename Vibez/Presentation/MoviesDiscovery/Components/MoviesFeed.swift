@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MovieFeed: View {
     let movies: [Movie]
-    var loadMore: () async -> Void
+    var loadMovies: (Bool) async -> Void
 
     var body: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 16) {
@@ -11,7 +11,7 @@ struct MovieFeed: View {
                 .onAppear {
                     if movie.id == movies.last?.id {
                         Task {
-                            await loadMore()
+                            await loadMovies(true)
                         }
                     }
                 }
