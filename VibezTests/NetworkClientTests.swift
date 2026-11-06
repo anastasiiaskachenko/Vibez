@@ -96,7 +96,7 @@ struct NetworkClientTests {
         }
 
         let moviesSearchResponse = try await client.send(
-            GetMoviesFilterRequest(filters: MovieFilters(language: "sv-SE", withOriginCountry: "Sweden"))
+            GetMoviesFilterRequest(filters: MovieFilters(language: MovieFilters.MovieLanguage.swedish, withOriginCountry: MovieFilters.MovieCountry.sweden))
         )
 
         #expect(moviesSearchResponse.results.contains(where: { $0.title == "Det sjunde inseglet" }))

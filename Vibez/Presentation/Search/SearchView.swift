@@ -36,7 +36,7 @@ struct SearchView: View {
                     )
                 } else {
                     ScrollView {
-                        MovieFeed(movies: viewModel.suggestionMovies, loadMore: {})
+                        MovieFeed(movies: viewModel.suggestionMovies, loadMovies: {_ in })
                     }
                     .contentMargins(.top, 0, for: .scrollContent)
                     .simultaneousGesture(
