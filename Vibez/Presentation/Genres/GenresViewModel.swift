@@ -7,11 +7,10 @@ extension GenresView {
         var genres: [Genre] = []
         var errorMessage: String?
         var isLoading: Bool = false
-    
         init(repository: MovieRepositoryProtocol) {
             self.repository = repository
         }
-    
+
         @MainActor
         func loadGenres() async {
             isLoading = true

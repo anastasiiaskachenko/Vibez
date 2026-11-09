@@ -39,7 +39,7 @@ struct MovieRepositoryTests {
         let moviesSearchResponse = try await repository.getMoviesFilter( filters:
                 MovieFilters(language: "sv-SE", withOriginCountry: "SE"))
 
-        #expect(moviesSearchResponse.contains(where: { $0.title == "Det sjunde inseglet" }))
+        #expect(moviesSearchResponse.movies.contains(where: { $0.title == "Det sjunde inseglet" }))
     }
 
     @Test func testMoviesPagination() async throws {
@@ -47,7 +47,7 @@ struct MovieRepositoryTests {
                 MovieFilters(language: "sv-SE", withOriginCountry: "SE"))
         let moviesSearchResponse2 = try await repository.getMoviesFilter( filters:
                 MovieFilters(language: "sv-SE", withOriginCountry: "SE"), page: 2)
-        #expect(moviesSearchResponse1 != moviesSearchResponse2)
+        #expect(moviesSearchResponse1.movies != moviesSearchResponse2.movies)
     }
 
     @Test func testMovieByIdFetch() async throws {

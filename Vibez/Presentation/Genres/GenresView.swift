@@ -3,7 +3,7 @@ import SwiftUI
 struct GenresView: View {
     @State private var viewModel: ViewModel
 
-    init(repository: MovieRepositoryProtocol) {
+    init(repository: MovieRepositoryProtocol = Dependencies.shared.repository) {
         _viewModel = State(initialValue: ViewModel(repository: repository))
     }
     
