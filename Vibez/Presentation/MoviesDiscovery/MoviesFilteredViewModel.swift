@@ -16,7 +16,6 @@ extension MoviesFilteredView {
              self.movieFilters = movieFilters
         }
 
-        @MainActor
         func loadMovies() async {
             guard let filters = movieFilters, !isLoading, !isLastPage else { return }
             self.errorMessage = nil

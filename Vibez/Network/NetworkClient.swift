@@ -2,17 +2,17 @@ import Foundation
 
 final class NetworkClient {
     private var session: URLSession
-    
+
     init(session: URLSession = .shared) {
         self.session = session
     }
-    
+
     private static let decoder: JSONDecoder = {
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            return decoder
-        }()
-    
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+
     func send<T: APIRequest>(_ request: T) async throws -> T.Response {
         guard let url = request.url else {
             throw NetworkError.invalidURL
