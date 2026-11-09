@@ -53,7 +53,7 @@ extension MovieDetailsView {
             }
         }
 
-        func toggleProp(_ prop: ToggleProps) async {
+        func toggleProp(_ prop: ToggleProps) {
             guard var currentMovie = movie else { return }
             currentMovie[keyPath: prop.keyPath].toggle()
             self.movie = currentMovie

@@ -15,11 +15,11 @@ struct CustomButtonStyle: ButtonStyle {
             .padding(.vertical, 12)
             .padding(.horizontal, 16)
             .background(backgroundView)
-            .foregroundStyle(Color.white)
+            .foregroundStyle(Color.buttonForeground)
             .clipShape(Capsule())
             .overlay(
                 Capsule()
-                    .fill(.white)
+                    .fill(.buttonForeground)
                     .opacity(configuration.isPressed ? 0.3 : 0)
             )
             .scaleEffect(configuration.isPressed ? 1.2 : 1)
@@ -47,7 +47,7 @@ struct CustomButtonStyle: ButtonStyle {
             .fill(.ultraThinMaterial)
             .overlay(
                 Capsule()
-                    .strokeBorder(Color.white.opacity(0.15), lineWidth: 1)
+                    .strokeBorder(Color.buttonForeground.opacity(0.15), lineWidth: 1)
             )
     }
 }

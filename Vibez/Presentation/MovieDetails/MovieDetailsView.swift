@@ -14,10 +14,7 @@ struct MovieDetailsView: View {
 
                     MovieDescription(
                         movie: movie,
-                        toggleProp: { prop in
-                            Task {
-                                await viewModel.toggleProp(prop)
-                            }
+                        toggleProp: { prop in                         viewModel.toggleProp(prop)
                         }
                     )
 
@@ -33,9 +30,7 @@ struct MovieDetailsView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            Task {
-                                await viewModel.toggleProp(.isLiked)
-                            }
+                            viewModel.toggleProp(.isLiked)
                         } label: {
                             Image(systemName: movie.isLiked ? "heart.fill" : "heart" )
                                 .font(.system(size: 16, weight: .semibold))
