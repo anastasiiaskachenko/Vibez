@@ -28,7 +28,6 @@ extension MoviesFilteredView {
             defer { isLoading = false}
 
             do {
-                print("Movies fetch called with filters: \(movieFilters)")
                 let response = try await repository.getMoviesFilter(filters: movieFilters, page: page)
 
                 if loadMore {
