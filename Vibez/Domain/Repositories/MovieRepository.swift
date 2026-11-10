@@ -9,13 +9,16 @@ protocol MovieRepositoryProtocol {
     func toggleMovieIsSaved(id: Int) throws
     func toggleMovieIsWatched(id: Int) throws
     func toggleMovieIsLiked(id: Int) throws
+    func fetchReflections(byMovieID: Int) throws -> [Reflection]
+    func fetchReflection(byID: UUID) throws -> Reflection?
+    func updateReflection(id: UUID, newReflection: Reflection) throws
+    func deleteReflection(id: UUID) throws
 }
 
 struct MovieRepository: MovieRepositoryProtocol {
     private let tmdbClient: NetworkClient
     private let userMovieStore: UserMovieStorage
     private let reflectionStore: ReflectionStorage
-    private let maxPage = 500
 
     init(tmdbClient: NetworkClient, userMovieStore: UserMovieStorage, reflectionStore: ReflectionStorage) {
         self.tmdbClient = tmdbClient
@@ -46,7 +49,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     func getMoviesFilter(filters: MovieFilters, page: Int = 1) async throws -> MoviesPage {
         let genres = try await getGenres()
         let response = try await tmdbClient.send(GetMoviesFilterRequest(filters: filters, page: page))
-        let isLastPage = response.page >= response.totalPages || page >= maxPage
+        let isLastPage = response.page >= response.totalPages
         var movies = response.results.map { $0.toDomain() }
         movies = movies.map { movie in
             var updatedMovie = movie
@@ -100,6 +103,7 @@ struct MovieRepository: MovieRepositoryProtocol {
     }
 
     func updateReflection(id: UUID, newReflection: Reflection) throws {
+        print("updating reflection, prompt: \(newReflection.prompt), content \(newReflection.content)")
         try reflectionStore.updateReflection(id: id, newReflection: newReflection)
     }
 
