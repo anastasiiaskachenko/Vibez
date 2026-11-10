@@ -2,8 +2,9 @@ import SwiftUI
 
 struct MoviesFilteredView: View {
     @State private var viewModel: ViewModel
+    @State var openFiltersPanel: Bool = false
 
-    init(repository: MovieRepositoryProtocol = Dependencies.shared.repository, movieFilters: MovieFilters?) {
+    init(repository: MovieRepositoryProtocol = Dependencies.shared.repository, movieFilters: MovieFilters) {
         _viewModel = State(wrappedValue: ViewModel(repository: repository, movieFilters: movieFilters))
     }
 
@@ -22,10 +23,13 @@ struct MoviesFilteredView: View {
             } else {
                 ScrollView {
                     VStack {
-                        if let heroMovie = viewModel.movies.first { MoviesFilteredHero(movie: heroMovie)
+                        if let heroMovie = viewModel.movies.first,
+                           heroMovie.posterPath != nil {
+                            MoviesFilteredHero(movie: heroMovie)
                         }
 
-                        MovieFeed(movies: Array(viewModel.movies.dropFirst()), loadMore: viewModel.loadMovies)
+                        MovieFeed(movies: Array(viewModel.movies.dropFirst()), loadMovies: viewModel.loadMovies)
+                            .padding(16)
                         if viewModel.isLoading {
                             ProgressView()
                         } else if viewModel.isLastPage {
@@ -33,7 +37,7 @@ struct MoviesFilteredView: View {
                         } else if viewModel.errorMessage != nil {
                             Button {
                                 Task {
-                                    await viewModel.loadMovies()
+                                    await viewModel.loadMovies(loadMore: true)
                                 }
                             } label: {
                                 Text("Failed to load movies. Press here to retry.")
@@ -46,6 +50,24 @@ struct MoviesFilteredView: View {
                     .padding(.bottom, 20)
                 }
                 .ignoresSafeArea(edges: .top)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            openFiltersPanel = true
+                        } label: {
+                            Image(systemName: "line.3.horizontal.decrease.circle")
+                        }
+                    }
+                }
+                .sheet(isPresented: $openFiltersPanel) {
+                    FilterPanelSheet(
+                        filters: $viewModel.movieFilters,
+                        resetFilters: viewModel.resetFilters,
+                        fetchFilteredMovies: viewModel.loadMovies
+                    )
+                        .presentationDetents([.large])
+                        .presentationDragIndicator(.visible)
+                }
             }
 
         }
@@ -53,7 +75,7 @@ struct MoviesFilteredView: View {
         .foregroundStyle(Color.text)
         .task {
             if viewModel.movies.isEmpty {
-                await viewModel.loadMovies()
+                await viewModel.loadMovies(loadMore: false)
             }
         }
     }
