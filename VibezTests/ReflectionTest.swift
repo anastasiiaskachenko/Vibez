@@ -9,7 +9,7 @@ struct ReflectionStorageTests {
     private let testMovieId = 505
 
     @Test func testSavingReflection() throws {
-        let storage = try makeContainer(inMemory: true).reflectionStore
+        let storage = makeContainer(inMemory: true).reflectionStore
 
         try storage.createReflection(reflection:
                                     Reflection(
@@ -24,7 +24,7 @@ struct ReflectionStorageTests {
     }
 
     @Test func testSaveMultipleReflectionsPerMovie() throws {
-        let storage = try makeContainer(inMemory: true).reflectionStore
+        let storage = makeContainer(inMemory: true).reflectionStore
 
         try storage.createReflection(reflection:
                                     Reflection(
