@@ -8,8 +8,7 @@ struct ReflectionsView: View {
         repository: MovieRepositoryProtocol = Dependencies.shared.repository,
         movie: Movie,
         router: QuestionGenerationRoutingProtocol? = nil
-    )
-    {
+    ) {
         self.movie = movie
         _viewModel = State(
             initialValue: ViewModel(
@@ -21,7 +20,6 @@ struct ReflectionsView: View {
     }
 
     private var thoughtsIndex: Int? { viewModel.reflections.firstIndex(where: { $0.prompt == yourThoughtsPrompt})}
-
 
     var year: String {
         movie.releaseDate?.formatted(.dateTime.year()) ?? ""

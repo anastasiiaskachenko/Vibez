@@ -103,7 +103,6 @@ struct MovieRepository: MovieRepositoryProtocol {
     }
 
     func updateReflection(id: UUID, newReflection: Reflection) throws {
-        print("updating reflection, prompt: \(newReflection.prompt), content \(newReflection.content)")
         try reflectionStore.updateReflection(id: id, newReflection: newReflection)
     }
 
