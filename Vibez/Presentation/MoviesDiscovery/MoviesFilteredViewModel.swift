@@ -9,24 +9,32 @@ extension MoviesFilteredView {
         var isLoading: Bool = false
         var errorMessage: String?
         var isLastPage: Bool = false
-        var movieFilters: MovieFilters?
+        var movieFilters: MovieFilters
+        let initialFilters: MovieFilters
 
-        init(repository: MovieRepositoryProtocol, movieFilters: MovieFilters? = nil) {
+        init(repository: MovieRepositoryProtocol, movieFilters: MovieFilters) {
             self.repository = repository
              self.movieFilters = movieFilters
+            self.initialFilters = movieFilters
         }
 
-        func loadMovies() async {
-            guard let filters = movieFilters, !isLoading, !isLastPage else { return }
+        func resetFilters() { movieFilters = initialFilters}
+
+        func loadMovies(loadMore: Bool) async {
+            guard !isLoading, !isLastPage else { return }
             self.errorMessage = nil
 
             isLoading = true
             defer { isLoading = false}
 
             do {
-                let response = try await repository.getMoviesFilter(filters: filters, page: page)
+                let response = try await repository.getMoviesFilter(filters: movieFilters, page: page)
 
-                self.movies += response.movies
+                if loadMore {
+                    self.movies += response.movies
+                } else {
+                    self.movies = response.movies
+                }
                 self.isLastPage = response.isLastPage
 
                 if !self.isLastPage { self.page += 1}
