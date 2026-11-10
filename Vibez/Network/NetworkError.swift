@@ -12,9 +12,9 @@ enum NetworkError: LocalizedError {
         case .invalidURL:
             return "The requested URL was invalid."
         case .serverError(let statusCode):
-            return "TMDB API returned HTTP status \(statusCode)."
+            return "API returned HTTP status \(statusCode)."
         case .decodingError(let error):
-            return "Failed to parse TMDB response: \(error.localizedDescription)"
+            return "Failed to parse response: \(error.localizedDescription)"
         case .invalidResponse:
             return "Invalid HTTP response."
         case .unknown(let error):
