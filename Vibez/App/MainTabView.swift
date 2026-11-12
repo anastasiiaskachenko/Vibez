@@ -48,6 +48,7 @@ struct  MainTabView: View {
                 }
                 .tag(Tab.watchlist)
         }
+        .tint(Color.accent)
         .sheet(isPresented: $showSearchSheet) {
             SearchView()
                 .presentationDetents([.large])
