@@ -10,29 +10,14 @@ struct WatchlistView: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Text("Watchlist")
-                    .font(.title)
-                    .fontWeight(.semibold)
-                Spacer()
-                Button {
-                    Task {
-
-                    }
-                } label: {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.text)
-                }
-                .buttonStyle(.secondaryAction)
-            }
-            .frame(maxWidth: .infinity)
+            Text("Watchlist")
+                .font(.title)
+                .fontWeight(.semibold)
             .padding(.horizontal, 16)
             ScrollView {
                 VStack(spacing: 0) {
                     MovieListHorizontal(
-                        movies: viewModel.moviesSaved.movies,
-                        listTitle: "Want to see",
+                        moviesState: viewModel.moviesSaved,
                         navTitle: "View list",
                         listDestination: MoviesFeedPage(
                             moviesState: viewModel.moviesSaved
@@ -41,16 +26,14 @@ struct WatchlistView: View {
                     )
 
                     MovieListHorizontal(
-                        movies: viewModel.moviesWatched.movies,
-                        listTitle: "Already saw",
+                        moviesState: viewModel.moviesWatched,
                         navTitle: "View history",
                         listDestination: MoviesFeedPage(moviesState: viewModel.moviesWatched),
                         onToggleProp: viewModel.toggleProp
                     )
 
                     MovieListHorizontal(
-                        movies: viewModel.moviesLiked.movies,
-                        listTitle: "Liked",
+                        moviesState: viewModel.moviesLiked,
                         navTitle: "View list",
                         listDestination: MoviesFeedPage(moviesState: viewModel.moviesLiked),
                         onToggleProp: viewModel.toggleProp
@@ -67,6 +50,9 @@ struct WatchlistView: View {
         .onReceive(NotificationCenter.default.publisher(for: .userMovieDidUpdate)) { _ in
             Task {
                 await viewModel.fetchAllLists()
+                await viewModel.moviesSaved.fetchMoviesCount()
+                await viewModel.moviesWatched.fetchMoviesCount()
+                await viewModel.moviesLiked.fetchMoviesCount()
             }
         }
     }

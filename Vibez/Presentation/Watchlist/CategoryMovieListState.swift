@@ -4,17 +4,28 @@ import Foundation
 class CategoryMovieListState {
     let prop: UserMovieToggleParam
     let repository: MovieRepositoryProtocol
-
+    let title: String
     var movies: [Movie] = []
+    var moviesCount: Int = 0
     var isLoading: Bool = false
     var hasMorePages: Bool = true
     var errorMessage: String?
 
     init( prop: UserMovieToggleParam,
           repository: MovieRepositoryProtocol = Dependencies.shared.repository,
+          title: String
     ) {
         self.prop = prop
         self.repository = repository
+        self.title = title
+    }
+
+    func fetchMoviesCount() async {
+        do {
+            moviesCount = try repository.fetchMoviesByInteractionsCount(byInteractions: prop)
+        } catch {
+            self.errorMessage = error.localizedDescription
+        }
     }
 
     func loadNextPage(reset: Bool = false) async {

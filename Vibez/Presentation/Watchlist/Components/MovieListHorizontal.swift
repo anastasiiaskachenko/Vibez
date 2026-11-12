@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct MovieListHorizontal: View {
-    let movies: [Movie]
-    let listTitle: String
+    let moviesState: CategoryMovieListState
     let navTitle: String
     let listDestination: MoviesFeedPage
     @State var reflectionMovie: Movie?
@@ -13,10 +12,10 @@ struct MovieListHorizontal: View {
         VStack(spacing: 0) {
             HStack {
                 HStack(alignment: .center,spacing: 6) {
-                    Text(listTitle)
+                    Text(moviesState.title)
                         .font(.title2)
                         .fontWeight(.semibold)
-                    Text(String(movies.count))
+                    Text(String(moviesState.moviesCount))
                         .padding(8)
                         .background(Color.bgSecondaryLight)
                         .clipShape(Circle())
@@ -33,7 +32,7 @@ struct MovieListHorizontal: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(movies) { movie in
+                    ForEach(moviesState.movies) { movie in
                         MovieCardHorizontal(
                             movie: movie,
                             onToggleProp: onToggleProp) {
@@ -49,6 +48,9 @@ struct MovieListHorizontal: View {
         .padding(.horizontal, 16)
         .navigationDestination(item: $reflectionMovie) {movie in
             ReflectionsView(movie: movie)
+        }
+        .task {
+            await moviesState.fetchMoviesCount()
         }
     }
 }

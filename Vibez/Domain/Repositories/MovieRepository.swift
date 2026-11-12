@@ -15,6 +15,7 @@ protocol MovieRepositoryProtocol {
     func deleteReflection(id: UUID) throws
 
     func fetchMoviesByInteraction(prop: UserMovieToggleParam, offset: Int) async throws -> [Movie]
+    func fetchMoviesByInteractionsCount(byInteractions: UserMovieToggleParam) throws -> Int
 }
 
 struct MovieRepository: MovieRepositoryProtocol {
@@ -112,16 +113,34 @@ struct MovieRepository: MovieRepositoryProtocol {
         try reflectionStore.deleteReflection(id: id)
     }
 
+    func fetchMoviesByInteractionsCount (byInteractions prop: UserMovieToggleParam) throws -> Int {
+        return try userMovieStore.fetchUserMovieCount(byInteractions: prop)
+    }
+
     func fetchMoviesByInteraction(prop: UserMovieToggleParam, offset: Int = 0) async throws -> [Movie] {
         let userInteractions = try userMovieStore.fetchUserMovies(byInteractions: prop, offset: offset) 
         let ids: [Int] = userInteractions.map({ $0.movieId})
-        var movies: [Movie] = []
 
-        for  movieId in ids {
-            let movie = try await getMovieById(movieId: movieId)
-            movies.append(movie)
+        guard !ids.isEmpty else { return [] }
+
+        return try await withThrowingTaskGroup(of: (Int, Movie).self) { group in
+            for (index, movieId) in ids.enumerated() {
+                group.addTask {
+                    let movie = try await self.getMovieById(movieId: movieId)
+                    return (index, movie)
+                }
+            }
+
+            var indexedMovies: [(Int, Movie)] = []
+            indexedMovies.reserveCapacity(ids.count)
+
+            for try await result in group {
+                indexedMovies.append(result)
+            }
+
+            return indexedMovies
+                .sorted { $0.0 < $1.0 }
+                .map(\.1)
         }
-
-        return movies
     }
 }

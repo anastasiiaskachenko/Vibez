@@ -32,17 +32,9 @@ struct MoviesFeedPage: View {
                     .padding(.bottom, 20)
                 }
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            Task {
-
-                            }
-                        } label: {
-                            Image(systemName: "magnifyingglass")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(.text)
-                        }
-                        .buttonStyle(.secondaryAction)
+                    ToolbarItem(placement: .principal) {
+                        Text(moviesState.title)
+                            .font(.title)
                     }
                 }
             }

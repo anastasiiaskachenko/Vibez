@@ -12,21 +12,16 @@ extension WatchlistView {
 
         init(repository: MovieRepositoryProtocol) {
             self.repository = repository
-            self.moviesLiked = CategoryMovieListState(prop: .isLiked)
-            self.moviesWatched = CategoryMovieListState(prop: .isWatched)
-            self.moviesSaved = CategoryMovieListState(prop: .isSaved)
+            self.moviesLiked = CategoryMovieListState(prop: .isLiked, title: "Want to see")
+            self.moviesWatched = CategoryMovieListState(prop: .isWatched, title: "Alredy saw")
+            self.moviesSaved = CategoryMovieListState(prop: .isSaved, title: "Liked")
         }
 
         func fetchAllLists() async {
-            do {
-                async let saved: () = moviesSaved.loadNextPage(reset: true)
-                async let watched: () = moviesWatched.loadNextPage(reset: true)
-                async let liked: () = moviesLiked.loadNextPage(reset: true)
-                _ = try await (saved, watched, liked)
-            } catch {
-                self.errorMessage = error.localizedDescription
-            }
-
+            async let saved: () = moviesSaved.loadNextPage(reset: true)
+            async let watched: () = moviesWatched.loadNextPage(reset: true)
+            async let liked: () = moviesLiked.loadNextPage(reset: true)
+            _ = await (saved, watched, liked)
         }
 
         func toggleProp(_ prop: ToggleProps, movieId: Int) async {

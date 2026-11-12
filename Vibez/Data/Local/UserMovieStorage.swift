@@ -17,6 +17,17 @@ final class UserMovieStorage {
         self.context = container.mainContext
     }
 
+    private func predicate(for prop: UserMovieToggleParam) -> Predicate<UserMovieModel> {
+        switch prop {
+            case .isLiked:
+                return #Predicate<UserMovieModel> { $0.isLiked == true}
+            case .isWatched:
+                return #Predicate<UserMovieModel> { $0.isWatched == true}
+            case .isSaved:
+                return #Predicate<UserMovieModel> { $0.isSaved == true}
+        }
+    }
+
     func createUserMovie(movieId: Int, isLiked: Bool = false, isWatched: Bool = false, isSaved: Bool = false) throws {
         context.insert(UserMovieModel(movieId: movieId))
         try context.save()
@@ -34,23 +45,23 @@ final class UserMovieStorage {
             limit: Int = 20,
             offset: Int = 0
     ) throws -> [UserMovieModel] {
-        var predicate: Predicate<UserMovieModel>
-        switch prop {
-            case .isLiked:
-                predicate = #Predicate<UserMovieModel> { $0.isLiked == true}
-            case .isWatched:
-                predicate = #Predicate<UserMovieModel> { $0.isWatched == true}
-            case .isSaved:
-                predicate = #Predicate<UserMovieModel> { $0.isSaved == true}
-        }
+
 
         var descriptor = FetchDescriptor<UserMovieModel>(
-            predicate: predicate
+            predicate: predicate(for: prop)
         )
 
         descriptor.fetchLimit = limit
         descriptor.fetchOffset = offset
         return try context.fetch(descriptor)
+    }
+
+    func fetchUserMovieCount(byInteractions prop: UserMovieToggleParam) throws -> Int {
+        let descriptor = FetchDescriptor<UserMovieModel>(
+            predicate: predicate(for: prop)
+        )
+
+        return try context.fetchCount(descriptor)
     }
 
 

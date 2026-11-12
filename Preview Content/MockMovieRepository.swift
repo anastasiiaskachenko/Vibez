@@ -38,4 +38,8 @@ struct MockMovieRepository: MovieRepositoryProtocol {
     func fetchMoviesByInteraction(prop: UserMovieToggleParam, offset: Int) async throws -> [Movie] {
         return [Movie.mock]
     }
+
+    func fetchMoviesByInteractionsCount(byInteractions: UserMovieToggleParam) throws -> Int {
+        return 5
+    }
 }
