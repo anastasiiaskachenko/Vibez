@@ -111,24 +111,35 @@ struct MovieRepositoryTests {
 
     @Test func testToggleIsLiked() throws {
 
-        try  repository.toggleMovieIsLiked(id: testMovieId)
+        try repository.toggleMovieIsLiked(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isLiked == true)
     }
 
     @Test func testToggleIsSaved() throws {
-        try  repository.toggleMovieIsSaved(id: testMovieId)
+        try repository.toggleMovieIsSaved(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isSaved == true)
     }
 
     @Test func testToggleIsWatched() throws {
-        try  repository.toggleMovieIsWatched(id: testMovieId)
+        try repository.toggleMovieIsWatched(id: testMovieId)
         let updatedUserMovie = try userMovieStore.fetchUserMovie(byMovieID: testMovieId)
         #expect(updatedUserMovie != nil)
         #expect(updatedUserMovie?.isWatched == true)
+    }
 
+    @Test func testFetchMoviesByInteractions() async throws {
+        try repository.toggleMovieIsWatched(id: testMovieId)
+
+        var watchedMovies = try await repository.fetchMoviesByInteraction(prop: .isWatched)
+        #expect(watchedMovies.count == 1)
+
+        try repository.toggleMovieIsWatched(id: testMovieId)
+
+        watchedMovies = try await repository.fetchMoviesByInteraction(prop: .isWatched)
+        #expect(watchedMovies.count == 0)
     }
 }

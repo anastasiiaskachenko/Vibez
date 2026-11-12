@@ -38,6 +38,15 @@ struct  MainTabView: View {
                     Label("Discover", systemImage: "magnifyingglass")
                 }
                 .tag(Tab.searchSheet)
+            
+            NavigationStack {
+                WatchlistView()
+            }
+                .tabItem {
+                    Label("Watchlist", systemImage: "bookmark")
+                        .environment(\.symbolVariants, .none)
+                }
+                .tag(Tab.watchlist)
         }
         .sheet(isPresented: $showSearchSheet) {
             SearchView()

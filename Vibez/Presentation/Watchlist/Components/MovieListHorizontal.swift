@@ -4,19 +4,24 @@ struct MovieListHorizontal: View {
     let movies: [Movie]
     let listTitle: String
     let navTitle: String
-    let listDestination: TestView
+    let listDestination: MoviesFeedPage
+    @State var reflectionMovie: Movie?
+
+    var onToggleProp: (ToggleProps, Int) async -> Void
 
     var body: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 0) {
             HStack {
-                HStack(alignment: .bottom ,spacing: 6) {
+                HStack(alignment: .center,spacing: 6) {
                     Text(listTitle)
-                        .font(.title)
+                        .font(.title2)
+                        .fontWeight(.semibold)
                     Text(String(movies.count))
-                        .padding(14)
+                        .padding(8)
                         .background(Color.bgSecondaryLight)
                         .clipShape(Circle())
                 }
+                .padding(6)
                 Spacer()
                 NavigationLink(destination: listDestination) {
                     HStack {
@@ -29,7 +34,11 @@ struct MovieListHorizontal: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(movies) { movie in
-                        MovieCardHorizontal(movie: movie)
+                        MovieCardHorizontal(
+                            movie: movie,
+                            onToggleProp: onToggleProp) {
+                                reflectionMovie = movie
+                            }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -37,9 +46,9 @@ struct MovieListHorizontal: View {
                 .frame(maxWidth: .infinity, maxHeight: 160)
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 16)
+        .navigationDestination(item: $reflectionMovie) {movie in
+            ReflectionsView(movie: movie)
+        }
     }
 }
-
-

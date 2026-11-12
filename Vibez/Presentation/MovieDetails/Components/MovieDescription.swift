@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MovieDescription: View {
     let movie: Movie
-    let toggleProp: (MovieDetailsView.ToggleProps) -> Void
+    let toggleProp: (ToggleProps) -> Void
 
     var year: String {
         movie.releaseDate?.formatted(.dateTime.year()) ?? ""

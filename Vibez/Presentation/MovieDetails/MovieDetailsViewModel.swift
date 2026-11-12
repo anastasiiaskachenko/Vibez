@@ -1,33 +1,34 @@
 import Foundation
 
-extension MovieDetailsView {
-    enum ToggleProps {
-        case isLiked
-        case isSaved
-        case isWatched
+enum ToggleProps {
+    case isLiked
+    case isSaved
+    case isWatched
 
-        var keyPath: WritableKeyPath<Movie, Bool> {
-            switch self {
-            case .isLiked: return \.isLiked
-            case .isSaved: return \.isSaved
-            case .isWatched: return \.isWatched
-            }
-        }
-
-        func performToggle(
-            on repository: MovieRepositoryProtocol,
-            movieId: Int
-        ) throws {
-            switch self {
-            case .isLiked:
-                try repository.toggleMovieIsLiked(id: movieId)
-            case .isSaved:
-                try repository.toggleMovieIsSaved(id: movieId)
-            case .isWatched:
-                try repository.toggleMovieIsWatched(id: movieId)
-            }
+    var keyPath: WritableKeyPath<Movie, Bool> {
+        switch self {
+        case .isLiked: return \.isLiked
+        case .isSaved: return \.isSaved
+        case .isWatched: return \.isWatched
         }
     }
+
+    func performToggle(
+        on repository: MovieRepositoryProtocol,
+        movieId: Int
+    ) throws {
+        switch self {
+        case .isLiked:
+            try repository.toggleMovieIsLiked(id: movieId)
+        case .isSaved:
+            try repository.toggleMovieIsSaved(id: movieId)
+        case .isWatched:
+            try repository.toggleMovieIsWatched(id: movieId)
+        }
+    }
+}
+
+extension MovieDetailsView {
 
     @Observable
     class ViewModel {

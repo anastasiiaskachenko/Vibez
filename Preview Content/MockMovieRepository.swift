@@ -35,4 +35,7 @@ struct MockMovieRepository: MovieRepositoryProtocol {
 
     func deleteReflection(id: UUID) throws {}
 
+    func fetchMoviesByInteraction(prop: UserMovieToggleParam, offset: Int) async throws -> [Movie] {
+        return [Movie.mock]
+    }
 }

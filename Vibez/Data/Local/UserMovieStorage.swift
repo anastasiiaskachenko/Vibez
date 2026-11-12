@@ -29,6 +29,31 @@ final class UserMovieStorage {
         return try context.fetch(descriptor).first
     }
 
+    func fetchUserMovies(
+            byInteractions prop: UserMovieToggleParam,
+            limit: Int = 20,
+            offset: Int = 0
+    ) throws -> [UserMovieModel] {
+        var predicate: Predicate<UserMovieModel>
+        switch prop {
+            case .isLiked:
+                predicate = #Predicate<UserMovieModel> { $0.isLiked == true}
+            case .isWatched:
+                predicate = #Predicate<UserMovieModel> { $0.isWatched == true}
+            case .isSaved:
+                predicate = #Predicate<UserMovieModel> { $0.isSaved == true}
+        }
+
+        var descriptor = FetchDescriptor<UserMovieModel>(
+            predicate: predicate
+        )
+
+        descriptor.fetchLimit = limit
+        descriptor.fetchOffset = offset
+        return try context.fetch(descriptor)
+    }
+
+
     func toggleUserMovieParam(movieId: Int, param: UserMovieToggleParam) throws {
         var userMovie: UserMovieModel
 
@@ -43,12 +68,16 @@ final class UserMovieStorage {
         switch param {
         case .isLiked:
             userMovie.isLiked.toggle()
+            userMovie.isSaved = false
         case .isSaved:
             userMovie.isSaved.toggle()
         case .isWatched:
             userMovie.isWatched.toggle()
+            userMovie.isSaved = false
         }
         try context.save()
+
+        NotificationCenter.default.post(name: .userMovieDidUpdate, object: nil)
     }
 
     func deleteUserMovie(movieId: Int) throws {
@@ -56,4 +85,8 @@ final class UserMovieStorage {
         context.delete(userMovie)
         try context.save()
     }
+}
+
+extension Notification.Name {
+    static let userMovieDidUpdate = Notification.Name("UserMovieDidUpdate")
 }

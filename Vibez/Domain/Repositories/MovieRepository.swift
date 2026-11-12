@@ -13,6 +13,8 @@ protocol MovieRepositoryProtocol {
     func fetchReflection(byID: UUID) throws -> Reflection?
     func updateReflection(id: UUID, newReflection: Reflection) throws
     func deleteReflection(id: UUID) throws
+
+    func fetchMoviesByInteraction(prop: UserMovieToggleParam, offset: Int) async throws -> [Movie]
 }
 
 struct MovieRepository: MovieRepositoryProtocol {
@@ -108,5 +110,18 @@ struct MovieRepository: MovieRepositoryProtocol {
 
     func deleteReflection(id: UUID) throws {
         try reflectionStore.deleteReflection(id: id)
+    }
+
+    func fetchMoviesByInteraction(prop: UserMovieToggleParam, offset: Int = 0) async throws -> [Movie] {
+        let userInteractions = try userMovieStore.fetchUserMovies(byInteractions: prop, offset: offset) 
+        let ids: [Int] = userInteractions.map({ $0.movieId})
+        var movies: [Movie] = []
+
+        for  movieId in ids {
+            let movie = try await getMovieById(movieId: movieId)
+            movies.append(movie)
+        }
+
+        return movies
     }
 }
