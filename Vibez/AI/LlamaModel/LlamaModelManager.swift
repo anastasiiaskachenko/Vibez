@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 
 actor LlamaModelManager {
     static let shared = LlamaModelManager()
@@ -31,58 +32,46 @@ actor LlamaModelManager {
         return false
     }
 
+    private var downloadTask: Task<URL, Error>?
+
     func downloadModel(progressHandler: (@Sendable (Double) -> Void)? = nil) async throws -> URL {
         if isModelReady {
             print("[Fallback model] File already exists at \(localModelURL.path)")
             return localModelURL
         }
 
-        let session = URLSession(configuration: .default)
-        let (asyncBytes, response) = try await session.bytes(from: remoteURL)
+        if let downloadTask { return try await downloadTask.value}
 
-        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
+        let task = Task {
+            let delegate = progressHandler.map(DownloadProgressDelegate.init)
 
-        let expectedLength = response.expectedContentLength
-        var downloadedBytes: Int64 = 0
+            // The system streams the response straight to a temporary file and returns its location.
+            let (tempFileURL, response) = try await URLSession.shared.download(from: remoteURL, delegate: delegate)
 
-        let tempDestination = localModelURL.appendingPathExtension("tmp")
-        if FileManager.default.fileExists(atPath: tempDestination.path) {
-            try? FileManager.default.removeItem(at: tempDestination)
-        }
-
-        FileManager.default.createFile(atPath: tempDestination.path, contents: nil)
-        let fileHandle = try FileHandle(forWritingTo: tempDestination)
-        defer { try? fileHandle.close() }
-
-        var buffer = Data()
-        let chunkSize = 1024 * 1024
-
-        for try await byte in asyncBytes {
-            buffer.append(byte)
-            downloadedBytes += 1
-
-            if buffer.count >= chunkSize {
-                try fileHandle.write(contentsOf: buffer)
-                buffer.removeAll(keepingCapacity: true)
-
-                if expectedLength > 0 && progressHandler != nil {
-                    let progress = Double(downloadedBytes) / Double(expectedLength)
-                    progressHandler?(progress)
-                }
+            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                try? FileManager.default.removeItem(at: tempFileURL)
+                throw URLError(.badServerResponse)
             }
+
+            if FileManager.default.fileExists(atPath: localModelURL.path) {
+                try FileManager.default.removeItem(at: localModelURL)
+            }
+
+            try FileManager.default.moveItem(at: tempFileURL, to: localModelURL)
+            var url = localModelURL
+
+            //var values = URLResourceValues()
+            //values.isExcludedFromBackup = true
+            //try url.resourceValues(values)
+
+            return url
         }
 
-        if !buffer.isEmpty {
-            try fileHandle.write(contentsOf: buffer)
-        }
+        downloadTask = task
+        defer { downloadTask = nil }
+        return try await task.value
 
-        if FileManager.default.fileExists(atPath: localModelURL.path) {
-            try FileManager.default.removeItem(at: localModelURL)
-        }
 
-        try FileManager.default.moveItem(at: tempDestination, to: localModelURL)
 
         return localModelURL
     }
@@ -96,6 +85,34 @@ actor LlamaModelManager {
 
         if FileManager.default.fileExists(atPath: localModelURL.path) {
             try FileManager.default.removeItem(at: localModelURL)
+        }
+    }
+}
+
+nonisolated private final class DownloadProgressDelegate: NSObject, URLSessionTaskDelegate, Sendable {
+    private let progressHandler: @Sendable (Double) -> Void
+    private let state = Mutex<(observation: NSKeyValueObservation?, lastPercent: Int)>((nil, -1))
+
+    init(progressHandler: @escaping @Sendable (Double) -> Void) {
+        self.progressHandler = progressHandler
+    }
+
+    func urlSession(_ session: URLSession, didCreateTask task: URLSessionTask) {
+        let observation = task.progress.observe(\.fractionCompleted) { [weak self] progress, _ in
+            self?.report(progress.fractionCompleted)
+        }
+        state.withLock { $0.observation = observation }
+    }
+
+    private func report(_ fraction: Double) {
+        let percent = Int(fraction * 100)
+        let isNewPercent = state.withLock { state in
+            guard percent > state.lastPercent else { return false }
+            state.lastPercent = percent
+            return true
+        }
+        if isNewPercent {
+            progressHandler(fraction)
         }
     }
 }

@@ -19,14 +19,14 @@ enum LlamaModelServiceError: LocalizedError {
     }
 }
 
-struct LlamaModelService: LLMWorkerServiceProtocol {
+nonisolated struct LlamaModelService: LLMWorkerServiceProtocol {
     var isAvailable: Bool {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let path = appSupport.appendingPathComponent("Models/qwen2.5-1.5b-instruct-q4_k_m.gguf").path
         return FileManager.default.fileExists(atPath: path)
     }
 
-    func generatePrompts(for overview: String) async throws -> [String] {
+    func generateQuestions(for overview: String) async throws -> [String] {
         guard isAvailable else {
             throw  LlamaModelServiceError.modelUnavailable
         }
@@ -43,7 +43,7 @@ struct LlamaModelService: LLMWorkerServiceProtocol {
         )
 
         let messages = [
-            LlamaChatMessage(role: .system, content: systemPrompt),
+            LlamaChatMessage(role: .system, content: Prompt.reflection),
             LlamaChatMessage(role: .user, content: "Movie overview: \(overview)")
         ]
 
