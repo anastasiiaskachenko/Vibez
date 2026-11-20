@@ -1,4 +1,4 @@
 protocol LLMWorkerServiceProtocol: Sendable {
     var isAvailable: Bool { get }
-    func generatePrompts(for overview: String) async throws -> [String]
+    func generateQuestions(for overview: String) async throws -> [String]
 }
