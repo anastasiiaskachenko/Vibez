@@ -28,7 +28,7 @@ extension MovieDetailsView {
             }
         }
     }
-    
+
     @Observable
     class ViewModel {
         let repository: MovieRepositoryProtocol
@@ -53,7 +53,7 @@ extension MovieDetailsView {
             }
         }
 
-        func toggleProp(_ prop: ToggleProps) {
+        func toggleProp(_ prop: ToggleProps) async {
             guard var currentMovie = movie else { return }
             currentMovie[keyPath: prop.keyPath].toggle()
             self.movie = currentMovie

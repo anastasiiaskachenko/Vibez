@@ -71,7 +71,7 @@ struct MovieDescription: View {
                 }
                 HStack {
                     NavigationLink {
-                        TestView()
+                        ReflectionsView(movie: movie)
                     } label: {
                         HStack(spacing: 8) {
                             Image(systemName: "brain")

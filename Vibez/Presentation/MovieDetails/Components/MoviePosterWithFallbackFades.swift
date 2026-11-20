@@ -23,6 +23,7 @@ struct MoviePosterWithFallback: View {
             }
             .resizable()
             .scaledToFill()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .clipped()
             .if(fades) { view in
                 view.mask(

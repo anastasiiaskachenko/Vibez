@@ -23,4 +23,16 @@ struct MockMovieRepository: MovieRepositoryProtocol {
 
     func toggleMovieIsLiked(id: Int) throws {}
 
+    func fetchReflections(byMovieID: Int) throws -> [Reflection] {
+        return [Reflection(movieId: Movie.mock.id, prompt: "Prompt text", content: "Reflection content", updatedAt: Date.now)]
+    }
+
+    func fetchReflection(byID: UUID) throws -> Reflection? {
+        return Reflection(movieId: Movie.mock.id, prompt: "Prompt text", content: "Reflection content", updatedAt: Date.now)
+    }
+
+    func updateReflection(id: UUID, newReflection: Reflection) throws {}
+
+    func deleteReflection(id: UUID) throws {}
+
 }
