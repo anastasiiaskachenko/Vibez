@@ -2,6 +2,7 @@ import Foundation
 
 enum HTTPMethod: String {
     case GET
+    case POST
 }
 
 enum Endpoint {
@@ -9,6 +10,7 @@ enum Endpoint {
     case moviesFilter(filters: MovieFilters, page: Int)
     case movieById(movieId: Int)
     case genres
+    case openRouter
 
     var path: String {
         switch self {
@@ -16,12 +18,14 @@ enum Endpoint {
         case .moviesFilter: return "/3/discover/movie"
         case .movieById(let movieId): return "/3/movie/\(movieId)"
         case .genres: return "/3/genre/movie/list"
+        case .openRouter: return ""
         }
     }
 
     var method: HTTPMethod {
         switch self {
         case .moviesSearch, .moviesFilter, .movieById, .genres: return .GET
+        case .openRouter: return .POST
         }
     }
 
@@ -35,7 +39,7 @@ enum Endpoint {
             var queryItemsFilters = filters.toQueryItems()
             queryItemsFilters.append(URLQueryItem(name: "page", value: String(page)))
             return queryItemsFilters
-        case .movieById, .genres: return nil
+        case .movieById, .genres, .openRouter: return nil
         }
     }
 }
